@@ -85,4 +85,17 @@ class StickersBobsTable extends ObjectModel
         )
     );
 
+    /**
+     * Returns image types (.png, or .jpg)
+     *
+     * @return array{'id_sticker', 'image_type_sticker'};
+     */
+    public static function getImageType()
+    {
+        $sql = 'SELECT
+                id_sticker, image_type_sticker
+                FROM ' . _DB_PREFIX_ . 'stickers_bobs';
+        return Db::getInstance()->executeS($sql);
+    }
+
 }

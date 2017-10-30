@@ -238,7 +238,7 @@ class BlockStickersBobs extends Module
 
     public function uninstall()
     {
-        $image_type_and_id_stickers = BlockStickersBobsModel::getImagesType();
+        $image_type_and_id_stickers = StickersBobsTable::getImagesType();
         foreach ($image_type_and_id_stickers as $image_type_and_id_sticker) {
             $path_image_old = $this->local_path .
                               'views/img/' .
@@ -998,6 +998,8 @@ class BlockStickersBobs extends Module
 
     public function renderEntry()
     {
+        $this->context->controller->addCSS($this->_path . 'views/css/mini_stickers.css', 'all');
+        // select products
         $filter_name = Tools::getValue('filter_name');
         $filter_order = Tools::getValue('filter_order');
         $filter_data = null;
@@ -1017,74 +1019,13 @@ class BlockStickersBobs extends Module
                 }
             }
         }
+
         $products = $this->getProductsData($filter_data, $find_data, (int)Tools::getValue('id_category'));
         if (count($products) > 1000 && !Tools::getIsset('open_category')) {
             $products = null;
         }
 
-        //  $this->context->controller->addCSS($this->_path . 'views/css/entry.css', 'all');
-        $this->context->controller->addCSS($this->_path . 'views/css/mini_stickers.css', 'all');
-        $id_lang = $this->context->language->id;
-        if (Tools::isSubmit('open_category')) {
-            $sql = "
-          SELECT
-          `" . _DB_PREFIX_ . "product`.`id_product`,
-          `" . _DB_PREFIX_ . "product_lang`.`name`,
-          `id_image`,
-          `" . _DB_PREFIX_ . "category_lang`.`name` AS 'name_category'
-          FROM
-          `" . _DB_PREFIX_ . "product`,
-          `" . _DB_PREFIX_ . "product_lang`,
-          `" . _DB_PREFIX_ . "category_product`,
-          `" . _DB_PREFIX_ . "image`,
-          `" . _DB_PREFIX_ . "category_lang`
-          WHERE
-          `" . _DB_PREFIX_ . "product`.`id_product`= `" . _DB_PREFIX_ . "category_product`.`id_product` AND
-          `" . _DB_PREFIX_ . "product_lang`.`id_product`=`" . _DB_PREFIX_ . "category_product`.`id_product` AND
-          `" . _DB_PREFIX_ . "category_product`.`id_category`=" . (int)Tools::getValue('category_id') . " AND
-          `" . _DB_PREFIX_ . "image`.`id_product`=`" . _DB_PREFIX_ . "product`.`id_product` AND
-          `" . _DB_PREFIX_ . "category_lang`.`id_category`=`" . _DB_PREFIX_ . "product`.`id_category_default` AND
-          `" . _DB_PREFIX_ . "product_lang`.`id_lang`=" . (int)$id_lang . " AND
-          `" . _DB_PREFIX_ . "category_lang`.`id_lang`=" . (int)$id_lang . " AND
-            `cover`=1 ";
-        } else {
-            $sql = "
-          SELECT
-          `" . _DB_PREFIX_ . "product`.`id_product`,
-          `" . _DB_PREFIX_ . "category_lang`.`name` AS 'name_category',
-          `" . _DB_PREFIX_ . "product_lang`.`name`,
-          `id_image`
-          FROM
-          `" . _DB_PREFIX_ . "product`,
-          `" . _DB_PREFIX_ . "product_lang`,
-          `" . _DB_PREFIX_ . "category_lang`,
-          `" . _DB_PREFIX_ . "image`
-          WHERE
-          `" . _DB_PREFIX_ . "product`.`id_product`=`" . _DB_PREFIX_ . "product_lang`.`id_product` AND
-          `" . _DB_PREFIX_ . "category_lang`.`id_category`=`" . _DB_PREFIX_ . "product`.`id_category_default` AND
-          `" . _DB_PREFIX_ . "image`.`id_product`=`" . _DB_PREFIX_ . "product`.`id_product` AND
-          `" . _DB_PREFIX_ . "product_lang`.`id_lang`=" . (int)$id_lang . " AND
-          `" . _DB_PREFIX_ . "category_lang`.`id_lang`=" . (int)$id_lang . " AND
-          `cover`=1";
-        }
-
-        $products = Db::getInstance()->executeS($sql);
-        foreach ($products as $key => $product) {
-            $products[$key]['image_dir'] = _THEME_PROD_DIR_ .
-                                           '/' . chunk_split($product['id_image'], 1, '/') .
-                                           $product['id_image'] . '-' .
-                                           ImageType::getFormatedName('cart') . '.jpg';
-        }
-        if (count($products) > 1000 && !Tools::isSubmit('open_category')) {
-            $products = null;
-        }
-
-
-        $sql = '
-                    SELECT
-                    *
-                    FROM ' . _DB_PREFIX_ . 'stickers_bobs';
-        $stickers = Db::getInstance()->executeS($sql);
+        $stickers = StickersBobsTable::getImageType();
         $stickers = $this->addCurrentUrlImg($stickers);
 
 
@@ -1129,27 +1070,14 @@ class BlockStickersBobs extends Module
 
     private function getProductsData($filter_data, $find_data, $id_category = null)
     {
-        $products = MassChangeModel::getProductsData(
+        $products = BlockStickersBobsModel::getProductsData(
             $this->context->language->id,
             $filter_data,
             $find_data,
             $id_category
         );
 
-        $array_quantity_count = MassChangeModel::getCountQuantity();
-        $quantity = array();
-        foreach ($array_quantity_count as $key => $value) {
-            $quantity[$value['id_product']] = $value['count'];
-        }
-
-        $id_shop = $this->context->shop->id;
-        $currency = $this->context->currency;
-        $currency_sign = $this->context->currency->sign;
-        $currency_format = $this->context->currency->format;
-        $id_lang = $this->context->language->id;
-
         foreach ($products as $key => $product) {
-            $id_product = $products[$key]['id_product'];
 
             //IMAGE
             $products[$key]['image_dir'] = _THEME_PROD_DIR_ .
@@ -1157,35 +1085,6 @@ class BlockStickersBobs extends Module
                                            $product['id_image'] . '-' .
                                            ImageType::getFormatedName('cart') . '.jpg';
 
-            //PRICE AND PREFIX
-            $products[$key]['price'] = self::displayPriceNoSign(
-                Tools::convertPrice($product['price'], null, true),
-                $currency
-            );
-
-            $array_format_currency = self::getCurrencyFormat($currency_format, $currency_sign);
-            $products[$key]['price_prefix_right'] = $array_format_currency['price_prefix_right'];
-            $products[$key]['price_prefix_left'] = $array_format_currency['price_prefix_left'];
-
-            $products[$key]['final_price'] = self::displayPriceNoSign(
-                Product::getPriceStatic((int)$product['id_product']),
-                $currency
-            );
-
-            //QUANTITY COUNT
-            $products[$key]['quantity_count'] = $quantity[$id_product];
-
-            //SPECIFIC PRICE
-            $products[$key]['specific_price'] = self::getSpecificPrice(
-                $id_product,
-                $id_shop,
-                $id_lang,
-                $array_format_currency,
-                $currency
-            );
-
-            //LINK PRODUCT STORE
-            $products[$key]['href'] = $this->getPreviewUrl(new Product($id_product));
         }
 
         return $products;

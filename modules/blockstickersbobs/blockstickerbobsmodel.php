@@ -35,18 +35,14 @@ class BlockStickersBobsModel extends ObjectModel
           `id_image`,
           `" . _DB_PREFIX_ . "product_lang`.`name`,
           `" . _DB_PREFIX_ . "product`.`reference`,
-          `" . _DB_PREFIX_ . "category_lang`.`name` AS name_category,
-          `" . _DB_PREFIX_ . "product`.`price`,
-          `" . _DB_PREFIX_ . "product`.`active`,
-          `" . _DB_PREFIX_ . "stock_available`.`quantity`
-
+          `" . _DB_PREFIX_ . "category_lang`.`name` AS category_name
           ";
 
         $sql .= " FROM (
           " . _DB_PREFIX_ . "product,
           " . _DB_PREFIX_ . "product_lang,
-          " . _DB_PREFIX_ . "category_lang,
-          " . _DB_PREFIX_ . "stock_available";
+          " . _DB_PREFIX_ . "category_lang";
+
         if ($id_category != null) {
             $sql .= ",  " . _DB_PREFIX_ . "category_product";
         }
@@ -56,8 +52,6 @@ class BlockStickersBobsModel extends ObjectModel
             ";
 
         $sql .= " WHERE " .
-            _DB_PREFIX_ . "stock_available.id_product = " . _DB_PREFIX_ . "product.id_product AND " .
-            _DB_PREFIX_ . "stock_available.id_product_attribute = 0 AND " .
             _DB_PREFIX_ . "category_lang.id_category = " . _DB_PREFIX_ . "product.id_category_default AND " .
             _DB_PREFIX_ . "product_lang.id_lang = " . (int)$id_lang . " AND " .
             _DB_PREFIX_ . "category_lang.id_lang = " . (int)$id_lang . " AND " .
@@ -80,7 +74,7 @@ class BlockStickersBobsModel extends ObjectModel
                     continue;
                 }
                 switch (mb_strtolower($find_name)) {
-                    case 'id':
+                    case 'id_product':
                         $find_sql =  _DB_PREFIX_ . "product.id_product = " . (int)$find_value;
                         break;
                     case 'name':
@@ -89,14 +83,8 @@ class BlockStickersBobsModel extends ObjectModel
                     case 'reference':
                         $find_sql = 'LOCATE("'. pSQL($find_value) . '", ' . _DB_PREFIX_ . 'product.reference)';
                         break;
-                    case 'category':
+                    case 'category_name':
                         $find_sql =  'LOCATE("'. pSQL($find_value) . '", ' . _DB_PREFIX_ . 'category_lang.name)';
-                        break;
-                    case 'base_price':
-                        $find_sql =   _DB_PREFIX_ . "product.price = " . pSQL($find_value);
-                        break;
-                    case 'quantity':
-                        $find_sql = _DB_PREFIX_ . "stock_available.quantity = " . (int)$find_value;
                         break;
                     case 'active':
                         $find_sql = _DB_PREFIX_ . "product.active = " . (int)$find_value;
@@ -110,7 +98,7 @@ class BlockStickersBobsModel extends ObjectModel
         if ($filter_data != null) {
             $filter_name = '';
             switch (mb_strtolower($filter_data['filter_name'])) {
-                case 'id':
+                case 'id_product':
                     $filter_name =  _DB_PREFIX_ . "product.id_product";
                     break;
                 case 'name':
@@ -119,14 +107,8 @@ class BlockStickersBobsModel extends ObjectModel
                 case 'reference':
                     $filter_name =  _DB_PREFIX_ . "product.reference";
                     break;
-                case 'category':
-                    $filter_name =  "name_category";
-                    break;
-                case 'base_price':
-                    $filter_name =  _DB_PREFIX_ . "product.price";
-                    break;
-                case 'quantity':
-                    $filter_name =  _DB_PREFIX_ . "stock_available.quantity";
+                case 'category_name':
+                    $filter_name =  "category_name";
                     break;
             }
             $sql .= " ORDER BY " . $filter_name . ' ' . $filter_data['filter_order'];
@@ -210,19 +192,6 @@ class BlockStickersBobsModel extends ObjectModel
         }
     }
 
-
-    /**
-     * Returns image types (.png, or .jpg)
-     *
-     * @return array{'id_sticker', 'image_type_sticker'};
-     */
-    public static function getImagesType()
-    {
-        $sql = 'SELECT `image_type_sticker`,`id_sticker`
-              FROM `' . _DB_PREFIX_ . 'stickers_bobs`';
-        $image_type_and_id_stickers = Db::getInstance()->executeS($sql);
-        return Db::getInstance()->executeS($sql);
-    }
 
     public static function deleteTables()
     {
