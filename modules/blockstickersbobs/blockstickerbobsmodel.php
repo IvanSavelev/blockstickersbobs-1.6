@@ -35,7 +35,8 @@ class BlockStickersBobsModel extends ObjectModel
           `id_image`,
           `" . _DB_PREFIX_ . "product_lang`.`name`,
           `" . _DB_PREFIX_ . "product`.`reference`,
-          `" . _DB_PREFIX_ . "category_lang`.`name` AS category_name
+          `" . _DB_PREFIX_ . "category_lang`.`name` AS category_name,
+          `" . _DB_PREFIX_ . "product`.`active`
           ";
 
         $sql .= " FROM (
@@ -172,6 +173,8 @@ class BlockStickersBobsModel extends ObjectModel
 
         if (!Db::getInstance()->execute($sql)) {
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -200,351 +203,19 @@ class BlockStickersBobsModel extends ObjectModel
         Db::getInstance()->execute('DROP TABLE IF EXISTS ' . _DB_PREFIX_ . 'stickers_default_bobs');
     }
 
-    //PRICE BEGIN
 
-    public static function setBasePrice($price, $id_product, $id_shop)
+    public static function getNameProduct($id_product)
     {
-        self::normalizeValue($price);
-
-        $sql = "UPDATE " .
-            _DB_PREFIX_ . "product p, " .
-            _DB_PREFIX_ . "product_shop ps
-                SET p.price = " . (double)$price . ", " .
-            "ps.price = " . (double)$price . " " .
-            " WHERE p.id_product = " . (int)$id_product . " AND " .
-            "ps.id_product = " . (int)$id_product. " AND " .
-            "ps.id_shop = " . (int)$id_shop;
-        if (Db::getInstance()->execute($sql)) {
-            return true;
-        } else {
-            return false;
-        }
+        return Db::getInstance()->getValue('SELECT `name` FROM `' . _DB_PREFIX_ . 'product_lang`
+             WHERE id_product=' . (int)$id_product);
     }
 
-
-
-    public static function setTaxGroup($id_tax_rules_group, $id_product, $id_shop)
+    public static function getIdImageProduct($id_product)
     {
-        $check = true;
-        $sql = "UPDATE " .
-            _DB_PREFIX_ . "product_shop
-                    SET id_tax_rules_group = " . (int)$id_tax_rules_group . " " .
-            " WHERE id_product = " . (int)$id_product . " AND id_shop = " . (int)$id_shop;
-        if (!Db::getInstance()->execute($sql)) {
-            $check = false;
-        }
-        $sql = "UPDATE " .
-            _DB_PREFIX_ . "product
-                    SET id_tax_rules_group = " . (int)$id_tax_rules_group . " " .
-            " WHERE id_product = " . (int)$id_product;
-        if (!Db::getInstance()->execute($sql)) {
-            $check = false;
-        }
-        return $check;
-    }
-
-    public static function setSpecificPrice($price_or_percent, $id_specific_price, $id_shop)
-    {
-        self::normalizeValue($price_or_percent);
-        $sql = "UPDATE " .
-            _DB_PREFIX_ . "specific_price
-                SET reduction = IF(reduction_type='percentage', " . (double)$price_or_percent/100 . ", " .
-            (double)$price_or_percent . "), " .
-            "id_shop = " . (int)$id_shop .
-            " WHERE id_specific_price = " . (int)$id_specific_price;
-        if (Db::getInstance()->execute($sql)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static function deleteSpecificPrice($id_specific_price, $id_shop)
-    {
-        $sql = "DELETE  FROM " . _DB_PREFIX_ . "specific_price " .
-            "WHERE id_shop = " . (int)$id_shop . " AND " .
-            "id_specific_price = " . (int)$id_specific_price;
-        if (Db::getInstance()->execute($sql)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    //PRICE END
-
-    //QUANTITY BEGIN
-
-    public static function setBaseQuantity($quantity, $id_product)
-    {
-        $sql = "UPDATE " .
-            _DB_PREFIX_ . "stock_available
-                    SET quantity = " . (int)$quantity . " " .
-            "WHERE id_product_attribute = 0 AND id_product = " . (int)$id_product;
-
-        if (Db::getInstance()->execute($sql)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static function setAttributeQuantity($quantity, $id_product_attribute, $id_shop)
-    {
-        $sql = "UPDATE " .
-            _DB_PREFIX_ . "stock_available
-                    SET quantity = " . (int)$quantity . ", " .
-            "id_shop = " . (int)$id_shop .
-            " WHERE id_product_attribute = " . (int)$id_product_attribute;
-        if (Db::getInstance()->execute($sql)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static function getIdProductFromAttribute($id_product_attribute)
-    {
-        $id_product = Db::getInstance()->getValue(
-            "SELECT id_product FROM " . _DB_PREFIX_ . "stock_available
-                    WHERE id_product_attribute =" . (int)$id_product_attribute
-        );
-        return $id_product;
-    }
-
-    public static function getTotalQuantityFromProductId($id_product, $id_shop)
-    {
-        $sql =  "SELECT SUM(quantity) as quantity " .
-            "FROM " . _DB_PREFIX_ . "stock_available " .
-            "WHERE id_product_attribute <> 0 " .
-            "AND id_product = " . (int)$id_product . " " .
-            "AND id_shop =" . (int)$id_shop;
-        return Db::getInstance()->getValue($sql);
-    }
-
-    //QUANTITY END
-
-
-    //ACTION ENABLE
-
-    public static function setProductAction($active, $id_product, $id_shop)
-    {
-        $check = true;
-        $sql = "UPDATE " .
-            _DB_PREFIX_ . "product
-                    SET active = " . (int)$active .
-            " WHERE id_product = " . (int)$id_product;
-        if (!Db::getInstance()->execute($sql)) {
-            $check = false;
-        }
-
-        $sql = "UPDATE " .
-            _DB_PREFIX_ . "product_shop
-                    SET active = " . (int)$active .
-            " WHERE id_product = " . (int)$id_product . " AND id_shop = " . (int)$id_shop;
-        if (!Db::getInstance()->execute($sql)) {
-            $check = false;
-        }
-        return $check;
-    }
-
-    //ACTION END
-
-    //MASSIVE BASE QUANTITY
-
-    /**
-     * @return array [id_product] = quantity
-     */
-    public static function getCountQuantityNormalize()
-    {
-        $query = new DbQuery();
-        $query->select('COUNT(*) as count');
-        $query->select('id_product');
-        $query->from('stock_available');
-        $query->groupBy('id_product');
-        $quantity_count = Db::getInstance()->executeS($query);
-
-        $quantity_count_normalize = array();
-        foreach ($quantity_count as $value) {
-            $quantity_count_normalize[$value['id_product']] = $value['count'];
-        }
-        return $quantity_count_normalize;
-    }
-
-
-    public static function setMassiveQuantity($quantity, $base_factor_prefix, $id_product)
-    {
-        switch ($base_factor_prefix) {
-            case '+':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "stock_available
-                    SET quantity = quantity + " . (int)$quantity . " " .
-                    "WHERE id_product_attribute = 0 AND id_product = " . (int)$id_product;
-                break;
-            case '-':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "stock_available
-                    SET quantity = quantity - " . (int)$quantity . " " .
-                    "WHERE id_product_attribute = 0 AND id_product = " . (int)$id_product;
-                break;
-            case '*':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "stock_available
-                    SET quantity = quantity * " . (double)$quantity . " " .
-                    "WHERE id_product_attribute = 0 AND id_product = " . (int)$id_product;
-                break;
-            case '=':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "stock_available
-                    SET quantity = " . (int)$quantity . " " .
-                    "WHERE id_product_attribute = 0 AND id_product = " . (int)$id_product;
-                break;
-        }
-        if (Db::getInstance()->execute($sql)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    public static function setMassiveQuantityAttr($quantity, $base_factor_prefix, $id_product, $count_attribute)
-    {
-        if ($base_factor_prefix != '*') {
-            $quantity = $quantity/$count_attribute;
-        }
-
-        switch ($base_factor_prefix) {
-            case '+':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "stock_available
-                    SET quantity = quantity + " . (int)$quantity . " " .
-                    "WHERE id_product_attribute <> 0 AND id_product = " . (int)$id_product;
-                break;
-            case '-':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "stock_available
-                    SET quantity = quantity - " . (int)$quantity . " " .
-                    "WHERE id_product_attribute <> 0 AND id_product = " . (int)$id_product;
-                break;
-            case '*':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "stock_available
-                    SET quantity = quantity * " . (double)$quantity . " " .
-                    "WHERE id_product_attribute <> 0 AND id_product = " . (int)$id_product;
-                break;
-            case '=':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "stock_available
-                    SET quantity = " . (int)$quantity . " " .
-                    "WHERE id_product_attribute <> 0 AND id_product = " . (int)$id_product;
-                break;
-        }
-        if (Db::getInstance()->execute($sql)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    //PRICE MASSIVE
-
-    /**
-     * @param $id_shop
-     * @return array [id_product] = quantity
-     */
-    public static function getCountPriceNormalize($id_shop)
-    {
-        $query = new DbQuery();
-        $query->select('COUNT(*) as count');
-        $query->select('id_product');
-        $query->from('product_attribute_shop');
-        $query->where('id_shop = ' . (int)$id_shop);
-        $query->groupBy('id_product');
-        $price_count = Db::getInstance()->executeS($query);
-
-        $price_count_normalize = array();
-        foreach ($price_count as $value) {
-            $price_count_normalize[$value['id_product']] = $value['count'];
-        }
-        return $price_count_normalize;
-    }
-
-
-    public static function setMassivePrice($price, $base_factor_prefix, $id_product, $id_shop)
-    {
-        switch ($base_factor_prefix) {
-            case '+':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "product p, " .
-                    _DB_PREFIX_ . "product_shop ps
-                SET p.price = IF(p.price + " . (double)$price . "> 0, p.price + " . (double)$price . ", 0), " .
-                    "ps.price = IF(ps.price + " . (double)$price . "> 0, ps.price + " . (double)$price . ", 0) " .
-                    " WHERE p.id_product = " . (int)$id_product . " AND " .
-                    "ps.id_product = " . (int)$id_product. " AND " .
-                    "ps.id_shop = " . (int)$id_shop;
-                break;
-            case '-':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "product p, " .
-                    _DB_PREFIX_ . "product_shop ps
-                 SET p.price = IF(p.price - " . (double)$price . "> 0, p.price - " . (double)$price . ", 0), " .
-                    "ps.price = IF(ps.price - " . (double)$price . "> 0, ps.price - " . (double)$price . ", 0) " .
-                    " WHERE p.id_product = " . (int)$id_product . " AND " .
-                    "ps.id_product = " . (int)$id_product. " AND " .
-                    "ps.id_shop = " . (int)$id_shop;
-                break;
-            case '*':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "product p, " .
-                    _DB_PREFIX_ . "product_shop ps
-                 SET p.price = IF(p.price * " . (double)$price . "> 0, p.price * " . (double)$price . ", 0), " .
-                    "ps.price = IF(ps.price * " . (double)$price . "> 0, ps.price * " . (double)$price . ", 0) " .
-                    " WHERE p.id_product = " . (int)$id_product . " AND " .
-                    "ps.id_product = " . (int)$id_product. " AND " .
-                    "ps.id_shop = " . (int)$id_shop;
-                break;
-            case '=':
-                $sql = "UPDATE " .
-                    _DB_PREFIX_ . "product p, " .
-                    _DB_PREFIX_ . "product_shop ps
-                SET p.price = IF(" . (double)$price . "> 0, " . (double)$price . ", 0), " .
-                    "ps.price = IF(" . (double)$price . "> 0, " . (double)$price . ", 0) " .
-                    " WHERE p.id_product = " . (int)$id_product . " AND " .
-                    "ps.id_product = " . (int)$id_product. " AND " .
-                    "ps.id_shop = " . (int)$id_shop;
-                break;
-        }
-        if (Db::getInstance()->execute($sql)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    public static function deleteSpecificPriceFromIdProduct($id_product, $id_shop)
-    {
-        $sql = "DELETE  FROM " . _DB_PREFIX_ . "specific_price " .
-            "WHERE id_shop = " . (int)$id_shop . " AND " .
-            "id_product = " . (int)$id_product;
-        if (Db::getInstance()->execute($sql)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    /**
-     * Normalize Value
-     * @param $value
-     */
-    public static function normalizeValue(&$value)
-    {
-        if ($value < 0 || $value == "" || !is_numeric((double)$value)) {
-            $value = 0;
-        }
+        return Db::getInstance()->getValue('
+                              SELECT `id_image`
+                              FROM `' . _DB_PREFIX_ . 'image`
+                              WHERE id_product=' . (int)$id_product . '
+                              AND `cover`=1');
     }
 }

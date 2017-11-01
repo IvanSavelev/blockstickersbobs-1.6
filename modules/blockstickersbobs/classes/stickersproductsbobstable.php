@@ -42,9 +42,41 @@ class StickersProductsBobsTable extends ObjectModel
         'primary' => 'id',
         'multilang' => false,
         'fields' => array(
-            'id_product' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_product' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
         )
     );
+
+    /**
+     * Returns array stickers
+     *
+     * @return array
+     */
+    public static function getStickersProducts()
+    {
+        $sql = '
+                    SELECT
+                    *
+                    FROM ' . _DB_PREFIX_ . 'stickers_products_bobs';
+        return  Db::getInstance()->executeS($sql);
+    }
+
+
+    /**
+     * @param $id_product
+     *
+     * @return mixed
+     */
+    public static function getStickersProduct($id_product)
+    {
+
+        $sql = '
+                    SELECT
+                    *
+                    FROM ' . _DB_PREFIX_ . 'stickers_products_bobs
+                    WHERE `id_product`=' . (int)$id_product;
+        return Db::getInstance()->executeS($sql);
+    }
 
 }

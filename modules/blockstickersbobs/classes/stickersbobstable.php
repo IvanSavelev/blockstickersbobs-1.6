@@ -63,10 +63,11 @@ class StickersBobsTable extends ObjectModel
      * @see ObjectModel::$definition
      */
     public static $definition = array(
-        'table' => 'stickers_default_bobs',
+        'table' => 'stickers_bobs',
         'primary' => 'id_sticker',
         'multilang' => false,
         'fields' => array(
+            'id_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'name' =>				array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'title' =>				array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'activate' =>				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -78,8 +79,8 @@ class StickersBobsTable extends ObjectModel
             'color_font_sticker' =>				array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'color_background_sticker' =>				array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'size_font_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'x_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'y_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'x_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'y_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'width_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'height_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
         )
@@ -90,12 +91,36 @@ class StickersBobsTable extends ObjectModel
      *
      * @return array{'id_sticker', 'image_type_sticker'};
      */
-    public static function getImageType()
+    public static function getImagesType()
     {
         $sql = 'SELECT
                 id_sticker, image_type_sticker
                 FROM ' . _DB_PREFIX_ . 'stickers_bobs';
         return Db::getInstance()->executeS($sql);
+    }
+
+    /**
+     * Returns stickers parameters
+     *
+     * @return array
+     */
+    public static function getStickers()
+    {
+        $sql = 'SELECT
+                *
+                FROM ' . _DB_PREFIX_ . 'stickers_bobs';
+        return Db::getInstance()->executeS($sql);
+    }
+
+    public function save() {
+
+        $sql = "SELECT MAX(id_sticker) FROM `" . _DB_PREFIX_ . "stickers_bobs`";
+        $this->id_sticker = Db::getInstance()->getValue($sql) + 1;
+
+        if(!parent::save($this->id_sticker)) {
+            return false;
+        }
+        return true;
     }
 
 }
