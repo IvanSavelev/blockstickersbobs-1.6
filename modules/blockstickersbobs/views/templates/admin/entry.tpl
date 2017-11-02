@@ -53,7 +53,7 @@
 
         <div class=" col-xs-12 col-sm-6">
             <div class="btn-group-action">
-                <a href="{$current_url|escape:'htmlall':'UTF-8'}&amp;stickers=1"
+                <a href="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=stickers"
                    class="btn btn-default ">
                     <i class="process-icon-cogs"></i> {l s='Update/create stickers' mod='blockstickersbobs'}
                 </a>
@@ -62,7 +62,7 @@
     </div>
 
     <br>
-	<form method="post" action="{$current_url|escape:'htmlall':'UTF-8'}" id="massive_form">
+	<form method="post" action="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=empty" id="massive_form">
         <div class="row">
             <table class="table">
                 <thead>
@@ -72,10 +72,10 @@
 
 					<th class="fixed-width-xs center">
 						<span class="title_box active">{l s='ID' mod='blockstickersbobs'}
-							<a {if ($filter_name == 'id' && $filter_order == 'desc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;filter_name=id_product&amp;filter_order=desc">
+							<a {if ($filter_name == 'id' && $filter_order == 'desc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=empty&amp;filter_name=id_product&amp;filter_order=desc">
 								<i class="icon-caret-down"></i>
 							</a>
-							<a {if ($filter_name == 'id' && $filter_order == 'asc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;filter_name=id_product&amp;filter_order=asc">
+							<a {if ($filter_name == 'id' && $filter_order == 'asc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=empty&amp;filter_name=id_product&amp;filter_order=asc">
 								<i class="icon-caret-up"></i>
 							</a>
 						</span>
@@ -87,10 +87,10 @@
 
 					<th class="">
 						<span class="title_box center">{l s='Name' mod='blockstickersbobs'}
-							<a {if ($filter_name == 'name' && $filter_order == 'desc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;filter_name=Name&amp;filter_order=desc">
+							<a {if ($filter_name == 'name' && $filter_order == 'desc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=empty&amp;filter_name=Name&amp;filter_order=desc">
 								<i class="icon-caret-down"></i>
 							</a>
-							<a {if ($filter_name == 'name' && $filter_order == 'asc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;filter_name=Name&amp;filter_order=asc">
+							<a {if ($filter_name == 'name' && $filter_order == 'asc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=empty&amp;filter_name=Name&amp;filter_order=asc">
 								<i class="icon-caret-up"></i>
 							</a>
 						</span>
@@ -98,10 +98,10 @@
 
 					<th class="">
 						<span class="title_box center">{l s='Reference' mod='blockstickersbobs'}
-							<a {if ($filter_name == 'reference' && $filter_order == 'desc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;filter_name=Reference&amp;filter_order=desc">
+							<a {if ($filter_name == 'reference' && $filter_order == 'desc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=empty&amp;filter_name=Reference&amp;filter_order=desc">
 								<i class="icon-caret-down"></i>
 							</a>
-							<a {if ($filter_name == 'reference' && $filter_order == 'asc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;filter_name=Reference&amp;filter_order=asc">
+							<a {if ($filter_name == 'reference' && $filter_order == 'asc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=empty&amp;filter_name=Reference&amp;filter_order=asc">
 								<i class="icon-caret-up"></i>
 							</a>
 						</span>
@@ -109,10 +109,10 @@
 
 					<th class="">
 						<span class="title_box">{l s='Category' mod='blockstickersbobs'}
-							<a {if ($filter_name == 'category' && $filter_order == 'desc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;filter_name=Category&amp;filter_order=desc">
+							<a {if ($filter_name == 'category' && $filter_order == 'desc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=empty&amp;filter_name=Category&amp;filter_order=desc">
 								<i class="icon-caret-down"></i>
 							</a>
-							<a {if ($filter_name == 'category' && $filter_order == 'asc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;filter_name=Category&amp;filter_order=asc">
+							<a {if ($filter_name == 'category' && $filter_order == 'asc')}class="active"{/if} href="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=empty&amp;filter_name=Category&amp;filter_order=asc">
 								<i class="icon-caret-up"></i>
 							</a>
 						</span>
@@ -270,8 +270,7 @@
 
                         <td class="text-right">
                             <div class="btn-group-action">
-                                <a href="{$current_url|escape:'htmlall':'UTF-8'}&amp;
-                                id_product={(int)$product['id_product']|escape:'quotes':'UTF-8'}&amp;open_product=1"
+                                <a href="{$current_url|escape:'htmlall':'UTF-8'}&amp;id_product={(int)$product['id_product']|escape:'quotes':'UTF-8'}&amp;redirect=openproduct"
                                    class="btn btn-default">
                                     <i class="icon-pencil"></i> {l s='Edit' mod='blockstickersbobs'}
                                 </a>
