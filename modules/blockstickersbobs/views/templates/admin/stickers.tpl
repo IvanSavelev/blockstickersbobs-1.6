@@ -24,7 +24,7 @@
 *}
 
 {if isset($message)}{$message|escape:'quotes':'UTF-8'}{/if}
-<form action="{$current_url|escape:'htmlall':'UTF-8'}" method="post" class="form-horizontal clearfix">
+<form action="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=stickers" method="post" class="form-horizontal clearfix">
     <div class="panel col-lg-12">
         <div class="panel-heading">
             {l s='Quantity' mod='blockstickersbobs'}

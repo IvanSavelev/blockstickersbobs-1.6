@@ -92,16 +92,19 @@ class StickersBobsTable extends ObjectModel
      *
      * @return bool
      */
-    public function save() {
+    public function save($null_values = false, $auto_date = true)
+    {
 
-        $max_id_sticker = self::getMaxID();
-        if($max_id_sticker === null) {
-            $this->id_sticker = 0;
-        } else {
-            $this->id_sticker = $max_id_sticker + 1;
+        if($this->id_sticker === null) {
+            $max_id_sticker = self::getMaxID();
+            if($max_id_sticker === null) {
+                $this->id_sticker = 1;
+            } else {
+                $this->id_sticker = $max_id_sticker + 1;
+            }
         }
 
-        if(!parent::save($this->id_sticker)) {
+        if(!parent::save($null_values, $auto_date)) {
             return false;
         }
         return true;
@@ -119,6 +122,19 @@ class StickersBobsTable extends ObjectModel
                 FROM ' . _DB_PREFIX_ . 'stickers_bobs';
         return Db::getInstance()->executeS($sql);
     }
+
+
+    /**
+     * Returns image types (.png, or .jpg)
+     *
+     * @return array{'id_sticker', 'image_type_sticker'};
+     */
+    public static function getImageType($id_sticker)
+    {
+        $sql = 'SELECT image_type_sticker FROM ' . _DB_PREFIX_ . 'stickers_bobs WHERE id_sticker=' . (int)$id_sticker;
+        return Db::getInstance()->getValue($sql);
+    }
+
 
     /**
      * Returns stickers parameters

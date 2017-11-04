@@ -30,10 +30,10 @@
 		mod='blockstickersbobs'}<b>{$name_product|escape:'quotes':'UTF-8'}</b>
 	</h3>
 
-	<form action="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=entry" method="post" class="form-horizontal clearfix">
+	<form action="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=entry&amp;save_sticker_product=1" method="post" class="form-horizontal clearfix">
 
 		<input type="hidden" name="id_product" value="{$id_product|escape:'quotes':'UTF-8'}"/>
-		<input type="hidden" name="save_stickers_product" value="1"/>
+
 
 		<div class="row">
 			<!-- VIEWS -->
@@ -116,12 +116,12 @@
 									   class="noborder" {if $sticker.sticker_product_on}checked{/if}>
 							</td>
 							<td class="pointer left"
-								onclick="document.location = '{$current_url|escape:'htmlall':'UTF-8'}&amp;previous=openproduct&amp;previous_id_product={$id_product|escape:'quotes':'UTF-8'}&amp;redirect=sticker&amp;id_sticker={$sticker.id_sticker|escape:'quotes':'UTF-8'}'"
+								onclick="document.location = '{$current_url|escape:'htmlall':'UTF-8'}&amp;previous=openproduct&amp;id_product={$id_product|escape:'quotes':'UTF-8'}&amp;redirect=sticker&amp;id_sticker={$sticker.id_sticker|escape:'quotes':'UTF-8'}'"
 								>
 								{$sticker.id_sticker|escape:'quotes':'UTF-8'}
 							</td>
 							<td class="pointer center"
-								onclick="document.location = '{$current_url|escape:'htmlall':'UTF-8'}&amp;previous=openproduct&amp;previous_id_product={$id_product|escape:'quotes':'UTF-8'}&amp;redirect=sticker&amp;id_sticker={$sticker.id_sticker|escape:'quotes':'UTF-8'}'"
+								onclick="document.location = '{$current_url|escape:'htmlall':'UTF-8'}&amp;previous=openproduct&amp;id_product={$id_product|escape:'quotes':'UTF-8'}&amp;redirect=sticker&amp;id_sticker={$sticker.id_sticker|escape:'quotes':'UTF-8'}'"
 								>
 								{if $sticker.type_sticker==0}
 									<div class="box_sticker_stickers">
@@ -170,12 +170,12 @@
 								{/if}
 							</td>
 							<td class="pointer left"
-								onclick="document.location = '{$current_url|escape:'htmlall':'UTF-8'}&amp;previous=openproduct&amp;previous_id_product={$id_product|escape:'quotes':'UTF-8'}&amp;redirect=sticker&amp;id_sticker={$sticker.id_sticker|escape:'quotes':'UTF-8'}'"
+								onclick="document.location = '{$current_url|escape:'htmlall':'UTF-8'}&amp;previous=openproduct&amp;id_product={$id_product|escape:'quotes':'UTF-8'}&amp;redirect=sticker&amp;id_sticker={$sticker.id_sticker|escape:'quotes':'UTF-8'}'"
 								>
 								{$sticker.name|escape:'quotes':'UTF-8'}
 							</td>
 							<td class="pointer left"
-								onclick="document.location = '{$current_url|escape:'htmlall':'UTF-8'}&amp;previous=openproduct&amp;previous_id_product={$id_product|escape:'quotes':'UTF-8'}&amp;redirect=sticker&amp;id_sticker={$sticker.id_sticker|escape:'quotes':'UTF-8'}'"
+								onclick="document.location = '{$current_url|escape:'htmlall':'UTF-8'}&amp;previous=openproduct&amp;id_product={$id_product|escape:'quotes':'UTF-8'}&amp;redirect=sticker&amp;id_sticker={$sticker.id_sticker|escape:'quotes':'UTF-8'}'"
 								>
 								{if $sticker.activate==1}
 									<span class="list-action-enable action-enabled"

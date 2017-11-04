@@ -1,3 +1,4 @@
+/* ENTRY */
 #category_check {
     text-decoration: underline;
     color: #0077a4;
@@ -15,4 +16,15 @@
 
 .img_open_product {
     position: absolute;
+}
+/* STICKER */
+
+
+.sticker_radio {
+    text-align: center;
+    padding-bottom: 6px;
+}
+
+.row_sticker {
+    padding-bottom: 30px;
 }

@@ -79,4 +79,19 @@ class StickersProductsBobsTable extends ObjectModel
         return Db::getInstance()->executeS($sql);
     }
 
+    public static function deleteOfSticker($id_sticker)
+    {
+        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'stickers_products_bobs` WHERE `id_sticker` = ' . (int)$id_sticker;
+        return Db::getInstance()->execute($sql);
+    }
+
+    public static function deleteOfProduct($id_product)
+    {
+        $sql = "DELETE FROM `" . _DB_PREFIX_ . "stickers_products_bobs`
+               WHERE `id_product` =" . (int)$id_product;
+        return Db::getInstance()->execute($sql);
+    }
+
+
+
 }

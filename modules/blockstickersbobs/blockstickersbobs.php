@@ -35,11 +35,12 @@ class BlockStickersBobs extends Module
     const URL_DEFAULT_IMG = '/modules/blockstickersbobs/views/img/default_image.png';
     protected $tabl_stickers_front = array();
 
+
     public function __construct()
     {
         $this->name = 'blockstickersbobs';
         $this->tab = 'front_office_features';
-        $this->version = '1.0.2';
+        $this->version = '1.1.0';
         $this->author = 'Ivan Savelev';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -62,6 +63,7 @@ class BlockStickersBobs extends Module
                $this->registerHook('displayProductTabContent') &&
                $this->registerHook('displayProductListReviews');
     }
+
 
     private function installStickerBobs()
     {
@@ -145,6 +147,7 @@ class BlockStickersBobs extends Module
 
         return true;
     }
+
 
     private function installStickerDefaultBobs()
     {
@@ -253,18 +256,14 @@ class BlockStickersBobs extends Module
 
     public function hookDisplayHeader($params)
     {
-        $this->context->controller->addJs($this->_path . 'views/js/stickers_bobs.js', 'all');
+
         $this->context->controller->addCSS($this->_path . 'views/css/stickers.css', 'all');
-        $sql = "SELECT
-                *
-                FROM
-                " . _DB_PREFIX_ . "stickers_bobs, " . _DB_PREFIX_ . "stickers_products_bobs
-                WHERE " . _DB_PREFIX_ . "stickers_products_bobs.id_sticker=" . _DB_PREFIX_ . "stickers_bobs.id_sticker
-                AND
-                " . _DB_PREFIX_ . "stickers_bobs.activate=1";
-        $stickers = Db::getInstance()->executeS($sql);
+        $this->context->controller->addJs($this->_path . 'views/js/stickers_bobs.js', 'all');
+
+        $stickers = StickersBobsTable::getStickers();
+
         //normalize left Top ...
-        $block_canvas = BlockStickersBobs::_WIDTH_BOX_ / 2;
+        $block_canvas = self::_WIDTH_BOX_ / 2;
         foreach ($stickers as $key => $sticker) {
             if ($sticker['type_sticker'] == 0) {    //Right angle
                 $stickers[$key]['type_position_y'] = 'T';
@@ -280,7 +279,7 @@ class BlockStickersBobs extends Module
                 $stickers[$key]['type_position_y'] = 'T';
             } else {    //bottom
                 $stickers[$key]['type_position_y'] = 'B';
-                $stickers[$key]['y_sticker'] = BlockStickersBobs::_WIDTH_BOX_ -
+                $stickers[$key]['y_sticker'] = self::_WIDTH_BOX_ -
                                                (int)$sticker['y_sticker'] -
                                                (int)$sticker['height_sticker'];
             }
@@ -288,7 +287,7 @@ class BlockStickersBobs extends Module
                 $stickers[$key]['type_position_x'] = 'L';
             } else {
                 $stickers[$key]['type_position_x'] = 'R';
-                $stickers[$key]['x_sticker'] = BlockStickersBobs::_WIDTH_BOX_ -
+                $stickers[$key]['x_sticker'] = self::_WIDTH_BOX_ -
                                                (int)$sticker['x_sticker'] -
                                                (int)$sticker['width_sticker'] - 2;
             }
@@ -313,39 +312,12 @@ class BlockStickersBobs extends Module
     private function frontViewsStickersBobs($params, $views_product_display = false)
     {
         if ($views_product_display) {
-            $this->context->controller->addJs($this->_path . 'views/js/sticker_bobs.js', 'all');
+            $stickers = $this->frontViewSticker(Tools::getValue('id_product'));
             $id_product = Tools::getValue('id_product');
+
         } else {
+            $stickers = $this->frontViewStickers($params['product']['id_product']);
             $id_product = $params['product']['id_product'];
-        }
-        $sql = '
-                    SELECT
-                    *
-                    FROM ' . _DB_PREFIX_ . 'stickers_products_bobs
-                    WHERE `id_product`=' . (int)$id_product;
-        $stickers_products_id = Db::getInstance()->executeS($sql);
-
-        $stickers = array();
-
-        if ($views_product_display) {
-            foreach ($stickers_products_id as $sticker_products_id) {
-                foreach ($this->tabl_stickers_front as $sticker) {
-                    if ($sticker['id_sticker'] == $sticker_products_id['id_sticker'] && $sticker['visible_inside'] != 0
-                    ) {
-                        $stickers[] = $sticker;
-                        break;
-                    }
-                }
-            }
-        } else {
-            foreach ($stickers_products_id as $sticker_products_id) {
-                foreach ($this->tabl_stickers_front as $sticker) {
-                    if ($sticker['id_sticker'] == $sticker_products_id['id_sticker']) {
-                        $stickers[] = $sticker;
-                        break;
-                    }
-                }
-            }
         }
 
         if (!$this->isCached('views/templates/front/sticker_bobs.tpl', $this->getCacheId((int)$id_product))) {
@@ -357,6 +329,39 @@ class BlockStickersBobs extends Module
         }
 
         return $this->display(__FILE__, 'views/templates/front/sticker_bobs.tpl', $this->getCacheId((int)$id_product));
+    }
+
+
+    private function frontViewSticker($id_product)
+    {
+        $this->context->controller->addJs($this->_path . 'views/js/sticker_bobs.js', 'all');
+        $stickers_products_id = StickersProductsBobsTable::getStickersProduct($id_product);
+        $stickers = array();
+        foreach ($stickers_products_id as $sticker_products_id) {
+            foreach ($this->tabl_stickers_front as $sticker) {
+                if ($sticker['id_sticker'] == $sticker_products_id['id_sticker'] && $sticker['visible_inside'] != 0) {
+                    $stickers[] = $sticker;
+                    break;
+                }
+            }
+        }
+        return $stickers;
+    }
+
+
+    private function frontViewStickers($id_product)
+    {
+        $stickers_products_id = StickersProductsBobsTable::getStickersProduct($id_product);
+        $stickers = array();
+        foreach ($stickers_products_id as $sticker_products_id) {
+            foreach ($this->tabl_stickers_front as $sticker) {
+                if ($sticker['id_sticker'] == $sticker_products_id['id_sticker']) {
+                    $stickers[] = $sticker;
+                    break;
+                }
+            }
+        }
+        return $stickers;
     }
 
 
@@ -402,8 +407,8 @@ class BlockStickersBobs extends Module
             $this->saveSticker();
             $html .= $this->displayConfirmation($this->l('Configuration updated'));
         }
-        if (Tools::isSubmit('save_stickers_product')) {
-            $this->saveStickersProduct();
+        if (Tools::isSubmit('save_sticker_product')) {
+            $this->saveStickerProduct();
             $html .= $this->displayConfirmation($this->l('Configuration updated'));
         }
         if (Tools::isSubmit('delete_stickers')) {
@@ -446,22 +451,18 @@ class BlockStickersBobs extends Module
         if (Tools::isSubmit('id_sticker')) {
             $id_sticker = Tools::getValue('id_sticker');
         } else {
-            $sql = "SELECT MAX(id_sticker) FROM `" . _DB_PREFIX_ . "stickers_bobs`";
-            $id_sticker = Db::getInstance()->executeS($sql);
-            $id_sticker = (int)$id_sticker[0]['MAX(id_sticker)'] + 1;
-            $_POST['id_sticker'] = $id_sticker;
+            $id_sticker = StickersBobsTable::getMaxID() + 1;
         }
-        $subtype_sticker = 1;
+
+        /*$subtype_sticker = 1;
         if (Tools::isSubmit('subtype_sticker')) {
             $subtype_sticker = Tools::getValue('subtype_sticker');
-        }
-        //old_image_type
-        $old_image_type = Db::getInstance()->getValue('
-                              SELECT `image_type_sticker`
-                              FROM `' . _DB_PREFIX_ . 'stickers_bobs`
-                              WHERE id_sticker=' . (int)$id_sticker);
+        }*/
 
-        //main code обнавляем картинку
+        //old_image_type
+        $old_image_type = StickersBobsTable::getImageType($id_sticker);
+
+        //main code update picture
         if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['size'] > 0) {
             if (isset($_FILES['thumbnail']['tmp_name']) && !empty($_FILES['thumbnail']['tmp_name'])) {
                 if ($error = ImageManager::validateUpload($_FILES['thumbnail'], 4000000)) {
@@ -472,13 +473,11 @@ class BlockStickersBobs extends Module
                 $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
                 if (!$tmp_name) {
                     $this->errors[] = 'Error create temp file';
-
                     return false;
                 }
 
                 if (!move_uploaded_file($_FILES['thumbnail']['tmp_name'], $tmp_name)) { //File transfer in temp
                     $this->errors[] = 'Error file transfer in temp';
-
                     return false;
                 }
 
@@ -487,27 +486,21 @@ class BlockStickersBobs extends Module
                     $this->errors[] = Tools::displayError('Due to memory limit restrictions, this image cannot be
                     loaded. Please increase your memory_limit value via your server\'s configuration settings. ');
                     unlink($tmp_name);
-
                     return false;
                 }
 
                 if ($old_image_type) {
-                    $path_image_old = $this->local_path . 'views/img/' .
-                                      Tools::getValue('id_sticker') .
-                                      $old_image_type;
+                    $path_image_old = $this->local_path . 'views/img/' . Tools::getValue('id_sticker') . $old_image_type;
                     if (file_exists($path_image_old)) {
                         unlink($path_image_old); //Delete Old image
                     }
                 }
 
-                $path_image_new = $this->local_path .
-                                  'views/img/' .
-                                  $id_sticker .
-                                  strrchr(Tools::getValue('filename'), '.');
+                $path_image_new = $this->local_path . 'views/img/' . $id_sticker . strrchr(Tools::getValue('filename'),
+                        '.');
                 if (empty($this->errors) && !ImageManager::resize($tmp_name, $path_image_new, null, null)) {
                     $this->errors[] = Tools::displayError('An error occurred while uploading the image.');
                     unlink($tmp_name);
-
                     return false;
                 }
                 unlink($tmp_name);
@@ -518,63 +511,57 @@ class BlockStickersBobs extends Module
             $image_type_sticker = $old_image_type;
         }
 
-        //Save BD
-        $sql = "REPLACE INTO `" . _DB_PREFIX_ . "stickers_bobs`
-               VALUES(" .
-               (int)$id_sticker . ", '" .
-               pSQL(Tools::getValue('name')) . "', '" .
-               pSQL(Tools::getValue('title')) . "', " .
-               (int)Tools::getValue('activate') . ", " .
-               (int)Tools::getValue('visible_inside') . ",'" .
-               pSQL($image_type_sticker) . "', '" .
-               pSQL(Tools::getValue('text_sticker')) . "', " .
-               pSQL(Tools::getValue('type_sticker')) . ", " .
-               pSQL($subtype_sticker) . ", '" .
-               pSQL(Tools::getValue('color_font_sticker')) . "', '" .
-               pSQL(Tools::getValue('color_background_sticker')) . "', " .
-               pSQL(Tools::getValue('size_font_sticker')) . ", " .
-               (int)Tools::getValue('x_sticker') . ", " .
-               (int)Tools::getValue('y_sticker') . ", " .
-               (int)Tools::getValue('width_sticker') . ", " .
-               (int)Tools::getValue('height_sticker') . ") ";
-        if (!Db::getInstance()->execute($sql)) {
-            $this->errors[] = Tools::displayError('Error update BD');
+        $stickers_bobs_table = new StickersBobsTable($id_sticker);
 
+        $stickers_bobs_table->name = Tools::getValue('name');
+        $stickers_bobs_table->title = Tools::getValue('title');
+        $stickers_bobs_table->activate = Tools::getValue('activate');
+        $stickers_bobs_table->visible_inside = Tools::getValue('visible_inside');
+        $stickers_bobs_table->image_type_sticker = $image_type_sticker;
+        $stickers_bobs_table->text_sticker = Tools::getValue('text_sticker');
+        $stickers_bobs_table->type_sticker = Tools::getValue('type_sticker');
+        $stickers_bobs_table->subtype_sticker = 0;
+        $stickers_bobs_table->color_font_sticker = Tools::getValue('color_font_sticker');
+        $stickers_bobs_table->color_background_sticker = Tools::getValue('color_background_sticker');
+        $stickers_bobs_table->size_font_sticker = Tools::getValue('size_font_sticker');
+        $stickers_bobs_table->x_sticker = Tools::getValue('x_sticker');
+        $stickers_bobs_table->y_sticker = Tools::getValue('y_sticker');
+        $stickers_bobs_table->width_sticker = Tools::getValue('width_sticker');
+        $stickers_bobs_table->height_sticker = Tools::getValue('height_sticker');
+
+        if ($stickers_bobs_table->save()) {
+            Tools::clearSmartyCache();
             return true;
+        } else {
+            $this->errors[] = Tools::displayError('Error update BD');
+            return false;
         }
+
     }
 
-    public function saveStickersProduct()
-    {
 
+    public function saveStickerProduct()
+    {
         $id_product = Tools::getValue('id_product');
         //DELETE Field
-        $sql = "DELETE FROM `" . _DB_PREFIX_ . "stickers_products_bobs`
-               WHERE `id_product` =" . (int)$id_product;
-        if (!Db::getInstance()->execute($sql)) {
+        if (!StickersProductsBobsTable::deleteOfProduct($id_product)) {
             $this->errors[] = Tools::displayError('Error delete field BD');
         }
         if (Tools::isSubmit('checkbox_sticker')) {
-            $sql_variable = '';
             foreach (Tools::getValue('checkbox_sticker') as $id_sticker) {
-                $sql_variable .= '(' . (int)$id_product . ',' . (int)$id_sticker . '), ';
+                $stickers_product_bobs_table = new StickersProductsBobsTable();
+                $stickers_product_bobs_table->id_sticker = $id_sticker;
+                $stickers_product_bobs_table->id_product = $id_product;
+                if(!$stickers_product_bobs_table->save()) {
+                    $this->errors[] = Tools::displayError('Error update BD');
+                    return true;
+                }
             }
-            if (Tools::substr($sql_variable, - 2) == ', ') {
-                $sql_variable = Tools::substr($sql_variable, 0, - 2); //Delete end text
-            }
-
-            $sql = 'INSERT INTO `' . _DB_PREFIX_ .
-                   'stickers_products_bobs`( `id_product`, `id_sticker`) VALUES ' . pSQL($sql_variable);
-
-            if (!Db::getInstance()->execute($sql)) {
-                $this->errors[] = Tools::displayError('Error update BD');
-
-                return true;
-            }
-        } else {
-            //  Tools::redirect($_SERVER["HTTP_ORIGIN"] . $_SERVER["REQUEST_URI"]);
         }
+        Tools::clearSmartyCache();
+        return true;
     }
+
 
     public function deleteStickers($arStickers)
     {
@@ -583,43 +570,31 @@ class BlockStickersBobs extends Module
         }
     }
 
+
     public function deleteSticker($id_sticker = null)
     {
-        if ($id_sticker) {
+        if (Validate::isUnsignedInt($id_sticker)) {
             $this->deleteImageSticker($id_sticker);
-            $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'stickers_bobs` WHERE `id_sticker` = ' . (int)$id_sticker;
-            $delete = Db::getInstance()->execute($sql);
-            if (!$delete) {
+            $stickers_bobs_table = new StickersBobsTable($id_sticker);
+            if (!$stickers_bobs_table->delete()) {
                 $this->errors[] = 'Error delete sticker DB';
             }
-            $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'stickers_products_bobs` WHERE `id_sticker` = ' . (int)$id_sticker;
-            $delete = Db::getInstance()->execute($sql);
-            if (!$delete) {
+            if (!StickersProductsBobsTable::deleteOfSticker($id_sticker)) {
                 $this->errors[] = 'Error delete sticker DB';
             }
+            Tools::clearSmartyCache();
         } else {
             $this->errors[] = 'Error delete';
         }
     }
 
+
     public function deleteImageSticker($id_sticker)
     {
-        $image_type = Db::getInstance()->getValue('
-                              SELECT `image_type_sticker`
-                              FROM `' . _DB_PREFIX_ . 'stickers_bobs`
-                              WHERE id_sticker=' . (int)$id_sticker);
-        $path_image_old = $this->local_path . 'views/img/' . (string)$id_sticker . $image_type;
+        $image_type_sticker = StickersBobsTable::getImageType($id_sticker);
+        $path_image_old = $this->local_path . 'views/img/' . (string)$id_sticker . $image_type_sticker;
         if (file_exists($path_image_old)) {
             unlink($path_image_old); //Delete Old image
-        }
-
-        $delete = Db::getInstance()->update(
-            'stickers_bobs',
-            array('image_type_sticker' => ''),
-            'id_sticker = ' . (int)$id_sticker
-        );
-        if (!$delete) {
-            $this->errors[] = 'Error delete images DB';
         }
     }
 
@@ -629,7 +604,8 @@ class BlockStickersBobs extends Module
         $this->context->controller->addCSS($this->_path . 'views/css/admin_style.css', 'all');
         $this->context->controller->addCSS($this->_path . 'views/css/mini_stickers.css', 'all');
         $this->context->controller->addCSS($this->_path . 'views/css/stickers.css', 'all');
-        $this->context->controller->addJs($this->_path . 'views/js/open_product.js', 'all');
+
+        $this->context->controller->addJs($this->_path . 'views/js/open_product_admin.js', 'all');
 
 
         $stickers = StickersBobsTable::getStickers();
@@ -667,7 +643,7 @@ class BlockStickersBobs extends Module
             'id_product'         => $id_product,
             'name_product'       => $name_product,
             'path_image_product' => $path_image_product,
-            'width_box'          => BlockStickersBobs::_WIDTH_BOX_,
+            'width_box'          => self::_WIDTH_BOX_,
             'message'            => $message,
             'current_url'        =>
                 $this->normalizeURL(
@@ -704,30 +680,35 @@ class BlockStickersBobs extends Module
 
     public function renderSticker()
     {
-        $this->context->controller->addJs($this->_path . 'views/js/render_sticker_admin.js', 'all');
-        $this->context->controller->addJs('js/jquery/plugins/jquery.colorpicker.js', 'all');
-        $this->context->controller->addCSS($this->_path . 'views/css/sticker.css', 'all');
+
+        $this->context->controller->addCSS($this->_path . 'views/css/admin_style.css', 'all');
         $this->context->controller->addCSS($this->_path . 'views/css/stickers.css', 'all');
-        $this->context->controller->addJQueryUI('ui.draggable');
+
 
         if (Tools::isSubmit('id_sticker')) {    //id sticker
             $id_sticker = Tools::getValue('id_sticker');
-            $sticker = StickersBobsTable::getSticker($id_sticker);
+            $sticker = new StickersBobsTable($id_sticker);
             $new_sticker = false;
         } else {
-            $sticker = StickersDefaultBobsTable::getSticker(0);
+            $sticker = new StickersDefaultBobsTable(1);
             $id_sticker = StickersBobsTable::getMaxID()+1;
-            $sticker['name'] = 'New sticker №' . $id_sticker;
+            $sticker->name = 'New sticker №' . $id_sticker;
             $new_sticker = true;
         }
 
-        $image_uploader = $this->imageUploader($id_sticker, $sticker['image_type_sticker']);
-        $color_font_sticker_color = $this->colorModified($sticker['color_font_sticker']);
-        $color_background_sticker_color = $this->colorModified($sticker['color_background_sticker']);
+        $image_uploader = $this->imageUploader($id_sticker, $sticker->image_type_sticker);
+        $color_font_sticker_color = $this->colorModified($sticker->color_font_sticker);
+        $color_background_sticker_color = $this->colorModified($sticker->color_background_sticker);
 
+        $this->context->controller->addJs($this->_path . 'views/js/render_sticker_admin.js', 'all');
+        $this->context->controller->addJs('js/jquery/plugins/jquery.colorpicker.js', 'all');
+        $this->context->controller->addJQueryUI('ui.draggable');
+        Media::addJsDef(array('width_box' => self::_WIDTH_BOX_));
+        Media::addJsDef(array('type_sticker' => $sticker->type_sticker));
 
-        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'stickers_default_bobs`';
-        $stickers_default = Db::getInstance()->executeS($sql);
+        /* BEGIN STICKER DEFAULT ADD */
+
+        $stickers_default = StickersDefaultBobsTable::getStickers();
 
         $sticker_default_angle_right = array();
         $sticker_default_angle_left = array();
@@ -757,22 +738,23 @@ class BlockStickersBobs extends Module
         Media::addJsDef(array('sticker_default_label' => $sticker_default_label));
         Media::addJsDef(array('sticker_default_horizontal_strip' => $sticker_default_horizontal_strip));
         Media::addJsDef(array('sticker_default_image' => $sticker_default_image));
-        Media::addJsDef(array('width_box' => BlockStickersBobs::_WIDTH_BOX_));
-        Media::addJsDef(array('type_sticker' => $sticker['type_sticker']));
+
+        /* END STICKER DEFAULT ADD */
 
 
-        if (file_exists($this->local_path . 'views/img/' . $sticker['id_sticker'] . $sticker['image_type_sticker'])) {
-            $current_url_img = $this->_path . 'views/img/' . $sticker['id_sticker'] . $sticker['image_type_sticker'];
+        if (file_exists($this->local_path . 'views/img/' . $sticker->id_sticker . $sticker->image_type_sticker)) {
+            $current_url_img = $this->_path . 'views/img/' . $sticker->id_sticker . $sticker->image_type_sticker;
         } else {
             $current_url_img = $this::URL_DEFAULT_IMG;
         }
 
+
         $redirect = 'stickers';
-        $id_product = '';
+        $id_product_for_return = '';
         if(Tools::getIsset('previous') && Tools::getValue('previous') === 'openproduct') {
-            if(Tools::getIsset('previous_id_product')) {
+            if(Tools::getIsset('id_product')) {
                 $redirect = 'openproduct';
-                $id_product = '&id_product=' . Tools::getValue('previous_id_product');
+                $id_product_for_return = '&previous=openproduct&id_product=' . Tools::getValue('id_product');
             }
         }
 
@@ -787,19 +769,20 @@ class BlockStickersBobs extends Module
             'sticker_default_horizontal_strip' => $sticker_default_horizontal_strip,
             'sticker_default_image'            => $sticker_default_image,
             'message'                          => $message,
-            'width_box'                        => BlockStickersBobs::_WIDTH_BOX_,
+            'width_box'                        => self::_WIDTH_BOX_,
             'color_font_sticker_color'         => $color_font_sticker_color,
             'color_background_sticker_color'   => $color_background_sticker_color,
             'current_url_img'                  => $current_url_img,
             'current_url_default_img'          => $this::URL_DEFAULT_IMG,
             'new_sticker'                      => $new_sticker,
-            'current_url_save'                 => $this->context->link->getAdminLink('AdminModules') .
-                                                  '&redirect=' . $redirect . $id_product .
-                                                  '&configure=blockstickersbobs&tab_module=front_office_features&
-                                                  module_name=blockstickersbobs&id_sticker=' . $id_sticker,
-            'current_url_cancel'               =>
-                $this->context->link->getAdminLink('AdminModules') . '&redirect=' . $redirect . $id_product .
-                '&configure=blockstickersbobs&tab_module=front_office_features&module_name=blockstickersbobs'
+            'current_url'                      => $this->normalizeURL(
+                $this->context->link->getAdminLink('AdminModules') . '&' .
+                'configure=blockstickersbobs&
+                tab_module=front_office_features&
+                module_name=blockstickersbobs' .
+                $id_product_for_return
+            ),
+            'redirect'                         => $redirect
         ));
 
         return $this->display(__FILE__, 'views/templates/admin/sticker.tpl');
@@ -825,9 +808,6 @@ class BlockStickersBobs extends Module
             $image_old_dir=$this->context->controller->table . '_' . (int)$id_sticker . '_temp' . $image_type_sticker;
             $image_uploader['exist'] = 1;
             $image_uploader['image_url'] = $this->imageGenerate($image_dir, $image_old_dir, 1000, $image_type_sticker);
-            $image_uploader['delete_url'] = $this->normalizeURL($this->context->link->getAdminLink('AdminModules') .
-                    '&configure=blockstickersbobs&tab_module=front_office_features&module_name=blockstickersbobs
-                    &id_sticker=' . (int)$id_sticker . '&delete_image_sticker=1');
         } else {
             $image_uploader['exist'] = 0;
         }
@@ -884,6 +864,7 @@ class BlockStickersBobs extends Module
         }
     }
 
+
     /**
      * Returns black? if color light and white? if dark
      *
@@ -930,7 +911,7 @@ class BlockStickersBobs extends Module
         $this->context->controller->addCSS($this->_path . 'views/css/mini_stickers.css', 'all');
         $this->context->controller->addCSS($this->_path . 'views/css/admin_style.css', 'all');
 
-        $this->context->controller->addJs($this->_path . 'views/js/entry.js', 'all');
+        $this->context->controller->addJs($this->_path . 'views/js/entry_admin.js', 'all');
         // select products
         $filter_name = Tools::getValue('filter_name');
         $filter_order = Tools::getValue('filter_order');
@@ -989,7 +970,6 @@ class BlockStickersBobs extends Module
             $id_category
         );
 
-
         $stickers_product_id = StickersProductsBobsTable::getStickersProducts();
 
         foreach ($products as $key => $product) {
@@ -1002,12 +982,9 @@ class BlockStickersBobs extends Module
             foreach ($stickers_product_id as $sticker_product_id) {
                 if ($product['id_product'] == $sticker_product_id['id_product']) {
                     $products[$key]['stickers'][] = $sticker_product_id['id_sticker'];
-
                 }
             }
-
         }
-
         return $products;
     }
 
@@ -1021,6 +998,7 @@ class BlockStickersBobs extends Module
         return parent::renderList();
     }
 
+
     private function getStickersParameters()
     {
         $stickers_view_parameters = StickersBobsTable::getStickers();
@@ -1028,6 +1006,7 @@ class BlockStickersBobs extends Module
         $this->normalizeSVP($stickers_view_parameters);
         return $stickers_view_parameters;
     }
+
 
     /**
      * Update array('10'=> array('id_sticker' => 10 ...))
@@ -1042,6 +1021,7 @@ class BlockStickersBobs extends Module
         $stickers_view_parameters = $SVP;
 
     }
+
 
     /**
      * Get image path product
@@ -1063,10 +1043,12 @@ class BlockStickersBobs extends Module
             '.jpg';
     }
 
+
     private function normalizeURL($url) {
         $url =str_replace(array("\r", "\n", " "),'', $url);
         return $url;
     }
+
 
     private function addMessage()
     {

@@ -287,7 +287,7 @@
 					<td class="list-empty" colspan="12">
 						<div class="list-empty-msg">
 							<i class="icon-warning-sign list-empty-icon"></i>
-							{l s='No products to display' mod='masschange'}
+							{l s='No products to display' mod='blockstickersbobs'}
 						</div>
 					</td>
 				</tr>

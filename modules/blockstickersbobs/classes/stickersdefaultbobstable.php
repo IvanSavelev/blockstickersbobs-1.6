@@ -93,21 +93,33 @@ class StickersDefaultBobsTable extends ObjectModel
      *
      * @return bool
      */
-    public function save() {
-
-        $sql = "SELECT MAX(id_sticker) FROM `" . _DB_PREFIX_ . "stickers_default_bobs`";
-
-        $max_id_sticker = Db::getInstance()->getValue($sql);
-        if($max_id_sticker === null) {
-            $this->id_sticker = 0;
-        } else {
-            $this->id_sticker = $max_id_sticker + 1;
+    public function save($null_values = false, $auto_date = true) {
+        if($this->id_sticker === null) {
+            $sql = "SELECT MAX(id_sticker) FROM `" . _DB_PREFIX_ . "stickers_default_bobs`";
+            $max_id_sticker = Db::getInstance()->getValue($sql);
+            if($max_id_sticker === null) {
+                $this->id_sticker = 1;
+            } else {
+                $this->id_sticker = $max_id_sticker + 1;
+            }
         }
 
-        if(!parent::save($this->id_sticker)) {
+        if(!parent::save($null_values, $auto_date)) {
             return false;
         }
         return true;
+    }
+
+
+    /**
+     * Returns stickers parameters
+     *
+     * @return array
+     */
+    public static function getStickers()
+    {
+        $sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'stickers_default_bobs';
+        return Db::getInstance()->executeS($sql);
     }
 
     public static function getSticker($id_sticker)
