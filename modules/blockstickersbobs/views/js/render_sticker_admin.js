@@ -276,6 +276,7 @@ $(document).ready(function () {
     var image_sticker = $("#image_sticker");
 
 
+
     $('[name = text_sticker]').keyup(function () {
         var Value = $('[name = text_sticker]').val();
         angle_right_sticker.text(Value);
@@ -310,7 +311,83 @@ $(document).ready(function () {
         label_sticker.css({'background': Value});
         horizontal_strip_sticker.css({'background': Value});
 
+        angle_right_sticker.addClass(getClassColor(Value));
+
     });
+
+
+
+    function getClassColor(Value) {
+
+        angle_right_sticker.removeClass();
+        angle_right_sticker.addClass('angle_right_sticker');
+        var stringRGB = Value.substr(1);
+
+        var red = 0;
+        var green = 0;
+        var blue = 0;
+
+
+        if (stringRGB.length == 6) {
+            red = stringRGB.charAt(0) + stringRGB.charAt(1);
+            green = stringRGB.charAt(2) + stringRGB.charAt(3);
+            blue = stringRGB.charAt(4) + stringRGB.charAt(5);
+        }
+
+        red = parseInt(red, 16);
+        green = parseInt(green, 16);
+        blue = parseInt(blue, 16);
+
+
+
+        var light = (red * 0.8 + green + blue* 0.2) / 510 * 100;
+        angle_right_sticker.text(Math.round(light));
+
+        var class_color = '';
+        if(red > green && red > blue) {
+            if(green > blue) {
+                if(blue > 128) {
+                    class_color ='white'; //111
+                } else {
+                    class_color ='yellow'; //110
+                }
+            } else {
+                if(blue > 128) {
+                    class_color ='magenta'; //101
+                } else {
+                    class_color ='red';    //100
+                }
+            }
+        } else {
+            if(green > 128) {
+                if(blue > 128) {
+                    class_color ='aqua'; //011
+                } else {
+                    class_color ='lime'; //010
+                }
+            } else {
+                if(blue > 128) {
+                    class_color ='blue'; //001
+                } else {
+                    class_color ='black'; //000
+                }
+            }
+        }
+
+        var class_shine = '';
+        if(light>50) {
+            class_shine = 'dart';
+        } else {
+            class_shine = 'shine';
+        }
+
+
+
+        return class_color + '_' + class_shine;
+
+    }
+
+
 
     $('[name = x_sticker]').keyup(function () {
         $("#box_sticker").css({'left': Math.round($('[name = x_sticker]:visible').val()) + 'px'})
