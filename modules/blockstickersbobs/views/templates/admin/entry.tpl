@@ -81,7 +81,7 @@
 						</span>
 					</th>
 
-					<th class="pointer center">
+					<th class="center">
 						<span class="title_box">{l s='Image' mod='blockstickersbobs'}</span>
 					</th>
 
@@ -123,7 +123,7 @@
 						<span class="title_box">{l s='Status' mod='blockstickersbobs'}</span>
 					</th>
 
-					<th class="pointer center">
+					<th class="center">
 						<span class="title_box">{l s='Image sticker' mod='blockstickersbobs'}</span>
 					</th>
 
@@ -169,11 +169,11 @@
 
 					<th class="actions">
 						<span class="pull-right">
-						<button type="submit" name="submitFilterblockstickersbobs" class="btn btn-default">
+						<button type="submit" name="submitFilterBlockstickersbobs" class="btn btn-default">
 							<i class="icon-search"></i> {l s='Find' mod='blockstickersbobs'}
 						</button>
 						{if isset($find_data) && !$find_data|@count == 0}
-							<button type="submit" name="submitResetProductblockstickersbobs" class="btn btn-warning">
+							<button type="submit" name="submitResetProductBlockstickersbobs" class="btn btn-warning">
 								<i class="icon-eraser"></i>{l s='Reset' mod='blockstickersbobs'}
 							</button>
 						{/if}

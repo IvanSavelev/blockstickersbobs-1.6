@@ -27,6 +27,7 @@
     <div class="stickers_bobs">
         {foreach from=$stickers item=sticker}
             <div class="box_sticker dinamic_stickers_{$sticker.id_sticker|escape:'quotes':'UTF-8'}
+				{if $sticker.type_sticker==0} box_sticker_right {/if}
 				{if $sticker.type_sticker==1} box_sticker_left {/if}"
 					style="
 						{if $sticker.type_position_y=='T'}

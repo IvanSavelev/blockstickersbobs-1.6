@@ -906,6 +906,39 @@ class BlockStickersBobs extends Module
     }
 
 
+    private function colorModifiedDartOrWhite($color)
+    {
+        if ($color[0] == '#') {
+            $color = Tools::substr($color, 1);
+        }
+        if (Tools::strlen($color) == 6) {
+            list($red, $green, $blue) = array(
+                $color[0] . $color[1],
+                $color[2] . $color[3],
+                $color[4] . $color[5]
+            );
+        } elseif (Tools::strlen($color) == 3) {
+            list($red, $green, $blue) = array(
+                $color[0] . $color[0],
+                $color[1] . $color[1],
+                $color[2] . $color[2]
+            );
+        } else {
+            return false;
+        }
+        $red = hexdec($red);
+        $green = hexdec($green);
+        $blue = hexdec($blue);
+
+        $light = ($red * 0.8 + $green + $blue * 0.2) / 510 * 100;
+        if ($light > 50) {
+            return '#000000';
+        } else {
+            return '#FFFFFF';
+        }
+    }
+
+
     public function renderEntry()
     {
         $this->context->controller->addCSS($this->_path . 'views/css/mini_stickers.css', 'all');
@@ -924,7 +957,7 @@ class BlockStickersBobs extends Module
         $filter_data = array('filter_name' => $filter_name, 'filter_order' => $filter_order);
 
         $find_data = null;
-        if (Tools::getIsset('find_data') && !Tools::getIsset('submitResetProductMassChange')) {
+        if (Tools::getIsset('find_data') && !Tools::getIsset('submitResetProductblockstickersbobs')) {
             $find_data = Tools::getValue('find_data');
             foreach ($find_data as $key => $find_data_value) {
                 if ($find_data_value == "") {
