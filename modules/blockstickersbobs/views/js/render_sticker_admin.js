@@ -340,50 +340,164 @@ $(document).ready(function () {
 
 
 
-        var light = (red * 0.8 + green + blue* 0.2) / 510 * 100;
-        angle_right_sticker.text(Math.round(light));
+
+
 
         var class_color = '';
-        if(red > green && red > blue) {
-            if(green > blue) {
-                if(blue > 128) {
-                    class_color ='white'; //111
-                } else {
-                    class_color ='yellow'; //110
+
+
+        var half_color = 128;
+        var whole_color = 190;
+
+        var check_red = 0; //0-<128 128<x<190 190<x
+        var check_green = 0;
+        var check_blue = 0;
+
+        if(red < half_color) {
+            check_red = 0;
+        }
+        if(half_color < red && red< whole_color) {
+            check_red = 1;
+        }
+        if(whole_color < red){
+            check_red = 2;
+        }
+
+        if(green < half_color) {
+            check_green = 0;
+        }
+        if(half_color < green && green < whole_color) {
+            check_green = 1;
+        }
+        if(whole_color < green){
+            check_green = 2;
+        }
+
+        if(blue < half_color) {
+            check_blue = 0;
+        }
+        if(half_color < blue && blue < whole_color) {
+            check_blue = 1;
+        }
+        if(whole_color < blue){
+            check_blue = 2;
+        }
+
+
+        if(check_red == 0) { //0
+            if(check_green == 0) { //0 0
+                if (check_blue == 0) {
+                    class_color = 'black'; //0 0 0
                 }
-            } else {
-                if(blue > 128) {
-                    class_color ='magenta'; //101
-                } else {
-                    class_color ='red';    //100
+                if (check_blue == 1) {
+                    class_color = 'saturated_blue'; //0 0 170-240
+                }
+                if (check_blue == 2) {
+                    class_color = 'saturated_blue'; //0 0 170-240
                 }
             }
-        } else {
-            if(green > 128) {
-                if(blue > 128) {
-                    class_color ='aqua'; //011
-                } else {
-                    class_color ='lime'; //010
+            if(check_green == 1) { //0 170
+                if (check_blue == 0) {
+                    class_color = 'green'; //0 170 0
                 }
-            } else {
-                if(blue > 128) {
-                    class_color ='blue'; //001
-                } else {
-                    class_color ='black'; //000
+                if (check_blue == 1) {
+                    class_color = 'lada'; //0 170 170
+                }
+                if (check_blue == 2) {
+                    class_color = 'blue'; //0 170 240
+                }
+            }
+            if(check_green == 2) { //0 240
+                if (check_blue == 0) {
+                    class_color = 'saturated_green'; //0 240 0
+                }
+                if (check_blue == 1) {
+                    class_color = 'easy_green'; //0 240 170
+                }
+                if (check_blue == 2) {
+                    class_color = 'saturated_ocean';  //0 240 240
                 }
             }
         }
 
-        var class_shine = '';
-        if(light>50) {
-            class_shine = 'dart';
-        } else {
-            class_shine = 'shine';
+
+        if(check_red == 1) { //170
+            if(check_green == 0) { //170 0
+                if (check_blue == 0) {
+                    class_color = 'saturated_red'; //170 0 0
+                }
+                if (check_blue == 1) {
+                    class_color = 'gray_blue'; //170 0 170
+                }
+                if (check_blue == 2) {
+                    class_color = 'purple_blue'; //170 0 240
+                }
+            }
+            if(check_green == 1) { //170 170
+                if (check_blue == 0) {
+                    class_color = 'saturated_olive'; //170 170 0
+                }
+                if (check_blue == 1) {
+                    class_color = 'gray'; //170 170 170
+                }
+                if (check_blue == 2) {
+                    class_color = 'ocean'; //170 170 240
+                }
+            }
+            if(check_green == 2) { //170 240
+                if (check_blue == 0) {
+                    class_color = 'easy_olive'; //170 240 0
+                }
+                if (check_blue == 1) {
+                    class_color = 'olive'; //170 240 170
+                }
+                if (check_blue == 2) {
+                    class_color = 'plastic';  //170 240 240
+                }
+            }
+        }
+
+        if(check_red == 2) { //240
+            if (check_green == 0) { //240 0
+                if (check_blue == 0) {
+                    class_color = 'red'; //240 0 0
+                }
+                if (check_blue == 1) {
+                    class_color = 'purple_red'; //240 0 170
+                }
+                if (check_blue == 2) {
+                    class_color = 'saturated_purple'; //240 0 240
+                }
+            }
+            if (check_green == 1) { //240 170
+                if (check_blue == 0) {
+                    class_color = 'brown'; //240 170 0
+                }
+                if (check_blue == 1) {
+                    class_color = 'pink'; //240 170 170
+                }
+                if (check_blue == 2) {
+                    class_color = 'purple'; //240 170 240
+                }
+            }
+            if (check_green == 2) { //240 240
+                if (check_blue == 0) {
+                    class_color = 'easy_brown'; //240 240 0
+                }
+                if (check_blue == 1) {
+                    class_color = 'flesh'; //240 240 170
+                }
+                if (check_blue == 2) {
+                    class_color = 'easy_gray';  //240 240 240
+                }
+            }
         }
 
 
 
-        return class_color + '_' + class_shine;
+        $('[name = text_sticker]').val('check_red ' + check_red + ' check_green ' + check_green +' check_blue  ' + check_blue);
+        angle_right_sticker.text(class_color);
+        return class_color;
 
     }
 

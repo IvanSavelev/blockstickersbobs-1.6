@@ -906,33 +906,6 @@ class BlockStickersBobs extends Module
     }
 
 
-    private function colorModifiedDartOrWhite($color)
-    {
-        if ($color[0] == '#') {
-            $color = Tools::substr($color, 1);
-        }
-        if (Tools::strlen($color) == 6) {
-            list($red, $green, $blue) = array(
-                $color[0] . $color[1],
-                $color[2] . $color[3],
-                $color[4] . $color[5]
-            );
-        } else {
-            return false;
-        }
-        $red = hexdec($red);
-        $green = hexdec($green);
-        $blue = hexdec($blue);
-
-        $light = ($red * 0.8 + $green + $blue * 0.2) / 510 * 100;
-        if ($light > 50) {
-            return '#000000';
-        } else {
-            return '#FFFFFF';
-        }
-    }
-
-
     public function renderEntry()
     {
         $this->context->controller->addCSS($this->_path . 'views/css/mini_stickers.css', 'all');
