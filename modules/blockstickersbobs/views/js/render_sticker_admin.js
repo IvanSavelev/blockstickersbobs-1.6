@@ -275,7 +275,8 @@ $(document).ready(function () {
     var horizontal_strip_sticker = $("#horizontal_strip_sticker");
     var image_sticker = $("#image_sticker");
 
-
+    angle_right_sticker.addClass(getClassColor($('[name = color_background_sticker]').val(), 0, 0));
+    angle_left_sticker.addClass(getClassColor($('[name = color_background_sticker]').val(), 0, 0));
 
     $('[name = text_sticker]').keyup(function () {
         var Value = $('[name = text_sticker]').val();
@@ -311,16 +312,31 @@ $(document).ready(function () {
         label_sticker.css({'background': Value});
         horizontal_strip_sticker.css({'background': Value});
 
-        angle_right_sticker.addClass(getClassColor(Value));
-
+        angle_right_sticker.addClass(getClassColor(Value, 1, 0));
+        angle_left_sticker.addClass(getClassColor(Value, 1, 1));
     });
 
 
 
-    function getClassColor(Value) {
+    function getClassColor(Value, remove_class, type_sticker) {
 
-        angle_right_sticker.removeClass();
-        angle_right_sticker.addClass('angle_right_sticker');
+        if(remove_class) {
+            if(type_sticker == 0) {
+                angle_right_sticker.removeClass();
+                angle_right_sticker.addClass('angle_right_sticker');
+            }
+            if(type_sticker == 1) {
+                angle_left_sticker.removeClass();
+                angle_left_sticker.addClass('angle_left_sticker');
+            }
+
+
+        }
+
+
+        if(Value.length !== 7) {
+            return true;
+        }
         var stringRGB = Value.substr(1);
 
         var red = 0;
@@ -333,18 +349,13 @@ $(document).ready(function () {
             green = stringRGB.charAt(2) + stringRGB.charAt(3);
             blue = stringRGB.charAt(4) + stringRGB.charAt(5);
         }
-
         red = parseInt(red, 16);
         green = parseInt(green, 16);
         blue = parseInt(blue, 16);
 
 
 
-
-
-
         var class_color = '';
-
 
         var half_color = 128;
         var whole_color = 190;
@@ -390,10 +401,10 @@ $(document).ready(function () {
                     class_color = 'black'; //0 0 0
                 }
                 if (check_blue == 1) {
-                    class_color = 'saturated_blue'; //0 0 170-240
+                    class_color = 'saturated_blue'; //0 0 170
                 }
                 if (check_blue == 2) {
-                    class_color = 'saturated_blue'; //0 0 170-240
+                    class_color = 'super_blue'; //0 0 240
                 }
             }
             if(check_green == 1) { //0 170
@@ -493,10 +504,9 @@ $(document).ready(function () {
             }
         }
 
-
-
-        $('[name = text_sticker]').val('check_red ' + check_red + ' check_green ' + check_green +' check_blue  ' + check_blue);
-        angle_right_sticker.text(class_color);
+        //$('[name = text_sticker]').val('check_red ' + check_red + ' check_green ' + check_green +' check_blue  ' + check_blue);
+        //angle_right_sticker.text(class_color);
+       //angle_left_sticker.text(class_color);
         return class_color;
 
     }
