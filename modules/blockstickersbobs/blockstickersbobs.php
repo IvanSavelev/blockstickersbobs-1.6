@@ -340,6 +340,7 @@ class BlockStickersBobs extends Module
         foreach ($stickers_products_id as $sticker_products_id) {
             foreach ($this->tabl_stickers_front as $sticker) {
                 if ($sticker['id_sticker'] == $sticker_products_id['id_sticker'] && $sticker['visible_inside'] != 0) {
+                    $sticker['class_color_corners'] = $this->getClassColor($sticker['color_background_sticker']);
                     $stickers[] = $sticker;
                     break;
                 }
@@ -356,6 +357,7 @@ class BlockStickersBobs extends Module
         foreach ($stickers_products_id as $sticker_products_id) {
             foreach ($this->tabl_stickers_front as $sticker) {
                 if ($sticker['id_sticker'] == $sticker_products_id['id_sticker']) {
+                    $sticker['class_color_corners'] = $this->getClassColor($sticker['color_background_sticker']);
                     $stickers[] = $sticker;
                     break;
                 }
@@ -605,6 +607,7 @@ class BlockStickersBobs extends Module
         $this->context->controller->addCSS($this->_path . 'views/css/mini_stickers.css', 'all');
         $this->context->controller->addCSS($this->_path . 'views/css/stickers.css', 'all');
 
+        $this->context->controller->addJs($this->_path . 'views/js/get_color_admin.js', 'all');
         $this->context->controller->addJs($this->_path . 'views/js/open_product_admin.js', 'all');
 
 
@@ -623,6 +626,7 @@ class BlockStickersBobs extends Module
         $message = $this->addMessage();
 
         foreach ($stickers as $key => $sticker) {
+            $stickers[$key]['class_color_corners'] = $this->getClassColor($sticker['color_background_sticker']);
             if (empty($stickers_products_id)) {
                 $stickers[$key]['sticker_product_on'] = 0;
             } else {
@@ -700,6 +704,7 @@ class BlockStickersBobs extends Module
         $color_font_sticker_color = $this->colorModified($sticker->color_font_sticker);
         $color_background_sticker_color = $this->colorModified($sticker->color_background_sticker);
 
+        $this->context->controller->addJs($this->_path . 'views/js/get_color_admin.js', 'all');
         $this->context->controller->addJs($this->_path . 'views/js/render_sticker_admin.js', 'all');
         $this->context->controller->addJs('js/jquery/plugins/jquery.colorpicker.js', 'all');
         $this->context->controller->addJQueryUI('ui.draggable');
@@ -865,15 +870,7 @@ class BlockStickersBobs extends Module
     }
 
 
-    /**
-     * Returns black? if color light and white? if dark
-     *
-     * @param $color
-     *
-     * @return string
-     * @author  Bobs
-     */
-    private function colorModified($color)
+    private function colorExpandList($color)
     {
         if ($color[0] == '#') {
             $color = Tools::substr($color, 1);
@@ -897,6 +894,25 @@ class BlockStickersBobs extends Module
         $green = hexdec($green);
         $blue = hexdec($blue);
 
+
+        return array('red' => $red, 'green' => $green, 'blue' => $blue);
+    }
+
+    /**
+     * Returns black? if color light and white? if dark
+     *
+     * @param $color
+     *
+     * @return string
+     * @author  Bobs
+     */
+    private function colorModified($color)
+    {
+        $array_color = $this->colorExpandList($color);
+        $red = $array_color['red'];
+        $green = $array_color['green'];
+        $blue = $array_color['blue'];
+
         $light = ($red * 0.8 + $green + $blue * 0.2) / 510 * 100;
         if ($light > 50) {
             return '#000000';
@@ -906,12 +922,14 @@ class BlockStickersBobs extends Module
     }
 
 
+
     public function renderEntry()
     {
         $this->context->controller->addCSS($this->_path . 'views/css/mini_stickers.css', 'all');
         $this->context->controller->addCSS($this->_path . 'views/css/admin_style.css', 'all');
 
         $this->context->controller->addJs($this->_path . 'views/js/entry_admin.js', 'all');
+
         // select products
         $filter_name = Tools::getValue('filter_name');
         $filter_order = Tools::getValue('filter_order');
@@ -989,16 +1007,6 @@ class BlockStickersBobs extends Module
     }
 
 
-    public function renderList() // TODO
-    {
-        $this->addRowAction('edit');
-        $this->addRowAction('preview');
-        $this->addRowAction('duplicate');
-        $this->addRowAction('delete');
-        return parent::renderList();
-    }
-
-
     private function getStickersParameters()
     {
         $stickers_view_parameters = StickersBobsTable::getStickers();
@@ -1059,5 +1067,168 @@ class BlockStickersBobs extends Module
             }
         }
         return $message;
+    }
+
+    private function getClassColor($color) {
+
+        $array_color = $this->colorExpandList($color);
+        $red = $array_color['red'];
+        $green = $array_color['green'];
+        $blue = $array_color['blue'];
+
+        $class_color = '';
+
+        $half_color = 128;
+        $whole_color = 190;
+
+        $check_red = 0; //0-<128 128<x<190 190<x
+        $check_green = 0;
+        $check_blue = 0;
+
+        if($red < $half_color) {
+            $check_red = 0;
+        }
+        if($half_color < $red && $red< $whole_color) {
+            $check_red = 1;
+        }
+        if($whole_color < $red){
+            $check_red = 2;
+        }
+
+        if($green < $half_color) {
+            $check_green = 0;
+        }
+        if($half_color < $green && $green < $whole_color) {
+            $check_green = 1;
+        }
+        if($whole_color < $green){
+            $check_green = 2;
+        }
+
+        if($blue < $half_color) {
+            $check_blue = 0;
+        }
+        if($half_color < $blue && $blue < $whole_color) {
+            $check_blue = 1;
+        }
+        if($whole_color < $blue){
+            $check_blue = 2;
+        }
+
+
+        if($check_red == 0) { //0
+            if($check_green == 0) { //0 0
+                if ($check_blue == 0) {
+                    $class_color = 'black'; //0 0 0
+                }
+                if ($check_blue == 1) {
+                    $class_color = 'saturated_blue'; //0 0 170
+                }
+                if ($check_blue == 2) {
+                    $class_color = 'super_blue'; //0 0 240
+                }
+            }
+            if($check_green == 1) { //0 170
+                if ($check_blue == 0) {
+                    $class_color = 'green'; //0 170 0
+                }
+                if ($check_blue == 1) {
+                    $class_color = 'lada'; //0 170 170
+                }
+                if ($check_blue == 2) {
+                    $class_color = 'blue'; //0 170 240
+                }
+            }
+            if($check_green == 2) { //0 240
+                if ($check_blue == 0) {
+                    $class_color = 'saturated_green'; //0 240 0
+                }
+                if ($check_blue == 1) {
+                    $class_color = 'easy_green'; //0 240 170
+                }
+                if ($check_blue == 2) {
+                    $class_color = 'saturated_ocean';  //0 240 240
+                }
+            }
+        }
+
+
+        if($check_red == 1) { //170
+            if($check_green == 0) { //170 0
+                if ($check_blue == 0) {
+                    $class_color = 'saturated_red'; //170 0 0
+                }
+                if ($check_blue == 1) {
+                    $class_color = 'gray_blue'; //170 0 170
+                }
+                if ($check_blue == 2) {
+                    $class_color = 'purple_blue'; //170 0 240
+                }
+            }
+            if($check_green == 1) { //170 170
+                if ($check_blue == 0) {
+                    $class_color = 'saturated_olive'; //170 170 0
+                }
+                if ($check_blue == 1) {
+                    $class_color = 'gray'; //170 170 170
+                }
+                if ($check_blue == 2) {
+                    $class_color = 'ocean'; //170 170 240
+                }
+            }
+            if($check_green == 2) { //170 240
+                if ($check_blue == 0) {
+                    $class_color = 'easy_olive'; //170 240 0
+                }
+                if ($check_blue == 1) {
+                    $class_color = 'olive'; //170 240 170
+                }
+                if ($check_blue == 2) {
+                    $class_color = 'plastic';  //170 240 240
+                }
+            }
+        }
+
+        if($check_red == 2) { //240
+            if ($check_green == 0) { //240 0
+                if ($check_blue == 0) {
+                    $class_color = 'red'; //240 0 0
+                }
+                if ($check_blue == 1) {
+                    $class_color = 'purple_red'; //240 0 170
+                }
+                if ($check_blue == 2) {
+                    $class_color = 'saturated_purple'; //240 0 240
+                }
+            }
+            if ($check_green == 1) { //240 170
+                if ($check_blue == 0) {
+                    $class_color = 'brown'; //240 170 0
+                }
+                if ($check_blue == 1) {
+                    $class_color = 'pink'; //240 170 170
+                }
+                if ($check_blue == 2) {
+                    $class_color = 'purple'; //240 170 240
+                }
+            }
+            if ($check_green == 2) { //240 240
+                if ($check_blue == 0) {
+                    $class_color = 'easy_brown'; //240 240 0
+                }
+                if ($check_blue == 1) {
+                    $class_color = 'flesh'; //240 240 170
+                }
+                if ($check_blue == 2) {
+                    $class_color = 'easy_gray';  //240 240 240
+                }
+            }
+        }
+
+        //$('[name = text_sticker]').val('$check_red ' + $check_red + ' $check_green ' + $check_green +' $check_blue  ' + $check_blue);
+        //angle_right_sticker.text($class_color);
+        //angle_left_sticker.text($class_color);
+        return $class_color;
+
     }
 }

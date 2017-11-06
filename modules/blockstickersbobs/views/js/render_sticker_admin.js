@@ -49,16 +49,18 @@ $(document).ready(function () {
     }
 
     function updateStikcerView() {
-        block_type_view_senior = $('#block_type_view_senior').offset();
-        left_drag = block_type_view_senior.left - $('#box_sticker').width();
-        top_drag = block_type_view_senior.top - $('#box_sticker').height();
-        right_drag = block_type_view_senior.left + Number(width_box);
-        bottom_drag = block_type_view_senior.top + Number(width_box);
+        var block_type_view_senior = $('#block_type_view_senior').offset();
+        var left_drag = parseInt(block_type_view_senior.left - $('#box_sticker').width());
+        var top_drag = parseInt(block_type_view_senior.top - $('#box_sticker').height());
+        var right_drag = parseInt(block_type_view_senior.left + Number(width_box));
+        var bottom_drag = parseInt(block_type_view_senior.top + Number(width_box));
         $("#box_sticker").draggable('option', 'containment', [left_drag, top_drag, right_drag, bottom_drag]);
         $('#horizontal_strip_sticker').css({'line-height': $('#horizontal_strip_sticker').height() + 'px'});
-        $('#label_sticker').css({'line-height': $('#label_sticker').height() + 'px'});
+        var line_height = parseInt($('[name = height_sticker]').val()) - parseInt($("[name = size_font_sticker]").val());
+        $('#label_sticker').css({'line-height': line_height + 'px'});
     }
 
+    updateStikcerView();
     $(window).resize(function () {
         setTimeout(updateStikcerView, 700);
     });
@@ -278,6 +280,8 @@ $(document).ready(function () {
     angle_right_sticker.addClass(getClassColor($('[name = color_background_sticker]').val(), 0, 0));
     angle_left_sticker.addClass(getClassColor($('[name = color_background_sticker]').val(), 0, 0));
 
+
+
     $('[name = text_sticker]').keyup(function () {
         var Value = $('[name = text_sticker]').val();
         angle_right_sticker.text(Value);
@@ -293,7 +297,7 @@ $(document).ready(function () {
         angle_left_sticker.css({'font-size': Value});
         label_sticker.css({'font-size': Value});
         horizontal_strip_sticker.css({'font-size': Value});
-
+        updateStikcerView();
     });
 
     $("[name = color_font_sticker]").change(function () {
@@ -329,8 +333,6 @@ $(document).ready(function () {
                 angle_left_sticker.removeClass();
                 angle_left_sticker.addClass('angle_left_sticker');
             }
-
-
         }
 
 

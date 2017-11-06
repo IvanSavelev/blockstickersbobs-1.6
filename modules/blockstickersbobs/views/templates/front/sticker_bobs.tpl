@@ -51,7 +51,9 @@
 					">
 
 				{if $sticker.type_sticker==0}
-					<span class="angle_right_sticker" style="
+					<span class="angle_right_sticker {$sticker.class_color_corners|escape:'quotes':'UTF-8'}"
+						  title="{$sticker.title|escape:'quotes':'UTF-8'}"
+						  style="
 							color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
 							font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
 							background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
@@ -61,7 +63,9 @@
 				{/if}
 
 				{if $sticker.type_sticker==1}
-					<span class="angle_left_sticker" style="
+					<span class="angle_left_sticker {$sticker.class_color_corners|escape:'quotes':'UTF-8'}"
+						  title="{$sticker.title|escape:'quotes':'UTF-8'}"
+						  style="
 						color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
 						font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
 						background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
@@ -71,19 +75,25 @@
 				{/if}
 
 				{if $sticker.type_sticker==2}
-					<div class="label_sticker" style="
+					<div class="label_sticker"
+						 title="{$sticker.title|escape:'quotes':'UTF-8'}"
+						 style="
 						 color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
 						 font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
-						 background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
+						 background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'};
+						 line-height: {$sticker.height_sticker-$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
 						 ">
 							{$sticker.text_sticker|escape:'quotes':'UTF-8'}
 					</div>
 				{/if}
 
 				{if $sticker.type_sticker==3}
-					<div class="horizontal_strip_sticker" style="
+					<div class="horizontal_strip_sticker"
+						 title="{$sticker.title|escape:'quotes':'UTF-8'}"
+						 style="
 						color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
 						font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
+						line-height: {$sticker.height_sticker|escape:'quotes':'UTF-8'}px;
 						background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
 						">
 							{$sticker.text_sticker|escape:'quotes':'UTF-8'}
@@ -91,7 +101,9 @@
 				{/if}
 
 				{if $sticker.type_sticker==4}
-					<img class="image_sticker " style="
+					<img class="image_sticker "
+						title="{$sticker.title|escape:'quotes':'UTF-8'}"
+						style="
 						border-radius: 0px;
 						background: none;
 						width:{$sticker.width_sticker|escape:'quotes':'UTF-8'}px;

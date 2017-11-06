@@ -191,7 +191,7 @@
 
 						<td class="fixed-width-xs center">{$product['id_product']|escape:'html':'UTF-8'}</td>
 
-						<td class="pointer center"><img class="imgm img-thumbnail"
+						<td class="center"><img class="imgm img-thumbnail"
 												src="{$product.image_dir|escape:'htmlall':'UTF-8'}" alt="no image"
 												width="70px">
 						</td>
@@ -202,7 +202,7 @@
 
                         <td class="center">{$product['category_name']|escape:'html':'UTF-8'}</td>
 
-						<td class="pointer fixed-width-sm text-center">
+						<td class="fixed-width-sm text-center">
 							<div class="list-action-enable action-enabled {if $product['active']==0} hidden {/if}"
 								 title="{l s='Active' mod='blockstickersbobs'}">
 								<i class="icon-check"></i>
@@ -213,7 +213,7 @@
 							</div>
 						</td>
 
-                        <td class="pointer ">
+                        <td class="">
                             <div class="sir_block_sticker">
                                 {foreach $product['stickers'] as $id_sticker}
                                         {$sticker=$stickers_view_parameters[$id_sticker]}
