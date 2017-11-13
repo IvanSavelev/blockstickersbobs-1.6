@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2017 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -22,7 +22,7 @@
 *  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*/
+**/
 
 class StickersProductsBobsTable extends ObjectModel
 {
@@ -38,13 +38,13 @@ class StickersProductsBobsTable extends ObjectModel
      * @see ObjectModel::$definition
      */
     public static $definition = array(
-        'table' => 'stickers_products_bobs',
-        'primary' => 'id',
+        'table'     => 'stickers_products_bobs',
+        'primary'   => 'id',
         'multilang' => false,
-        'fields' => array(
-            'id' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_product' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_sticker' =>				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+        'fields'    => array(
+            'id'         => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_sticker' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
         )
     );
 
@@ -91,7 +91,4 @@ class StickersProductsBobsTable extends ObjectModel
                WHERE `id_product` =" . (int)$id_product;
         return Db::getInstance()->execute($sql);
     }
-
-
-
 }

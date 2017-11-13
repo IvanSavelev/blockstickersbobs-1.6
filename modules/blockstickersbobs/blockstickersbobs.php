@@ -18,11 +18,11 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  @author PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2016 PrestaShop SA
+ *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
- */
+ **/
 
 include_once(_PS_MODULE_DIR_ . 'blockstickersbobs/blockstickerbobsmodel.php');
 include_once(_PS_MODULE_DIR_ . 'blockstickersbobs/classes/stickersdefaultbobstable.php');
@@ -67,14 +67,12 @@ class BlockStickersBobs extends Module
 
     private function installStickerBobs()
     {
-        if(!BlockStickersBobsModel::createStickersBobsTable()) {
+        if (!BlockStickersBobsModel::createStickersBobsTable()) {
             return false;
         }
 
         for ($id = 1; $id < 6; $id ++) {
-
             $stickers_bobs_table = new StickersBobsTable();
-
             if ($id == 1) {
                 $stickers_bobs_table->name = "Sticker №1";
                 $stickers_bobs_table->text_sticker = "Sale!";
@@ -151,7 +149,7 @@ class BlockStickersBobs extends Module
 
     private function installStickerDefaultBobs()
     {
-        if(!BlockStickersBobsModel::createStickersDefaultBobsTable()) {
+        if (!BlockStickersBobsModel::createStickersDefaultBobsTable()) {
             return false;
         }
 
@@ -300,8 +298,7 @@ class BlockStickersBobs extends Module
 
     public function hookDisplayProductListReviews($params)
     {
-        if(empty($this->tabl_stickers_front))
-        {
+        if (empty($this->tabl_stickers_front)) {
             $this->hookDisplayHeader(null);
         }
         return $this->renderFrontSticker($params);
@@ -318,7 +315,6 @@ class BlockStickersBobs extends Module
         if ($views_product_display) {
             $stickers = $this->frontViewSticker(Tools::getValue('id_product'));
             $id_product = Tools::getValue('id_product');
-
         } else {
             $stickers = $this->frontViewStickers($params['product']['id_product']);
             $id_product = $params['product']['id_product'];
@@ -426,7 +422,7 @@ class BlockStickersBobs extends Module
         }
 
 
-        if(Tools::isSubmit('redirect')) {
+        if (Tools::isSubmit('redirect')) {
             switch (Tools::getValue('redirect')) {
                 case 'stickers':
                     $html .= $this->renderStickers();
@@ -495,14 +491,15 @@ class BlockStickersBobs extends Module
                 }
 
                 if ($old_image_type) {
-                    $path_image_old = $this->local_path . 'views/img/' . Tools::getValue('id_sticker') . $old_image_type;
+                    $path_image_old = $this->local_path . 'views/img/' .
+                                      Tools::getValue('id_sticker') . $old_image_type;
                     if (file_exists($path_image_old)) {
                         unlink($path_image_old); //Delete Old image
                     }
                 }
 
-                $path_image_new = $this->local_path . 'views/img/' . $id_sticker . strrchr(Tools::getValue('filename'),
-                        '.');
+                $path_image_new = $this->local_path . 'views/img/' .
+                                  $id_sticker . strrchr(Tools::getValue('filename'), '.');
                 if (empty($this->errors) && !ImageManager::resize($tmp_name, $path_image_new, null, null)) {
                     $this->errors[] = Tools::displayError('An error occurred while uploading the image.');
                     unlink($tmp_name);
@@ -541,7 +538,6 @@ class BlockStickersBobs extends Module
             $this->errors[] = Tools::displayError('Error update BD');
             return false;
         }
-
     }
 
 
@@ -557,7 +553,7 @@ class BlockStickersBobs extends Module
                 $stickers_product_bobs_table = new StickersProductsBobsTable();
                 $stickers_product_bobs_table->id_sticker = $id_sticker;
                 $stickers_product_bobs_table->id_product = $id_product;
-                if(!$stickers_product_bobs_table->save()) {
+                if (!$stickers_product_bobs_table->save()) {
                     $this->errors[] = Tools::displayError('Error update BD');
                     return true;
                 }
@@ -677,8 +673,9 @@ class BlockStickersBobs extends Module
             'stickers'    => $stickers,
             'message'     => $message,
             'current_url' => $this->normalizeURL(
-                $this->context->link->getAdminLink('AdminModules') . '&configure=blockstickersbobs&
-            tab_module=front_office_features&module_name=blockstickersbobs')
+                $this->context->link->getAdminLink('AdminModules') .
+                '&configure=blockstickersbobs&tab_module=front_office_features&module_name=blockstickersbobs'
+            )
         ));
 
         return $this->display(__FILE__, 'views/templates/admin/stickers.tpl');
@@ -759,8 +756,8 @@ class BlockStickersBobs extends Module
 
         $redirect = 'stickers';
         $id_product_for_return = '';
-        if(Tools::getIsset('previous') && Tools::getValue('previous') === 'openproduct') {
-            if(Tools::getIsset('id_product')) {
+        if (Tools::getIsset('previous') && Tools::getValue('previous') === 'openproduct') {
+            if (Tools::getIsset('id_product')) {
                 $redirect = 'openproduct';
                 $id_product_for_return = '&previous=openproduct&id_product=' . Tools::getValue('id_product');
             }
@@ -901,6 +898,7 @@ class BlockStickersBobs extends Module
         return array('red' => $red, 'green' => $green, 'blue' => $blue);
     }
 
+
     /**
      * Returns black? if color light and white? if dark
      *
@@ -953,7 +951,7 @@ class BlockStickersBobs extends Module
                 }
             }
         }
-        if(Tools::getIsset('submitResetProductBlockstickersbobs')) {
+        if (Tools::getIsset('submitResetProductBlockstickersbobs')) {
             $find_data = null;
         }
         $products = $this->getProductsData($filter_data, $find_data, (int)Tools::getValue('id_category'));
@@ -970,7 +968,7 @@ class BlockStickersBobs extends Module
             'products'            => $products,
             'message'             => $message,
             'current_url'         => $this->normalizeURL($this->context->link->getAdminLink('AdminModules') .
-                                     '&configure=blockstickersbobs&tab_module=front_office_features&
+                                                         '&configure=blockstickersbobs&tab_module=front_office_features&
                                      module_name=blockstickersbobs'),
             'find_data'           => $find_data,
             'filter_name'         => mb_strtolower($filter_name),
@@ -997,7 +995,6 @@ class BlockStickersBobs extends Module
         $stickers_product_id = StickersProductsBobsTable::getStickersProducts();
 
         foreach ($products as $key => $product) {
-
             //IMAGE PRODUCT
             $products[$key]['image_dir'] = $this->getPathImage($product['id_image'], 'cart');
 
@@ -1029,11 +1026,10 @@ class BlockStickersBobs extends Module
     private function normalizeSVP(&$stickers_view_parameters)
     {
         $SVP = array();
-        foreach ($stickers_view_parameters as $key => $sticker_view_parameters) {
+        foreach ($stickers_view_parameters as $sticker_view_parameters) {
             $SVP[$sticker_view_parameters['id_sticker']] = $sticker_view_parameters;
         }
         $stickers_view_parameters = $SVP;
-
     }
 
 
@@ -1045,7 +1041,7 @@ class BlockStickersBobs extends Module
      *
      * @return string
      */
-    private function getPathImage($id_image,  $type_size = 'cart')
+    private function getPathImage($id_image, $type_size = 'cart')
     {
         return
             _THEME_PROD_DIR_ .
@@ -1058,8 +1054,9 @@ class BlockStickersBobs extends Module
     }
 
 
-    private function normalizeURL($url) {
-        $url =str_replace(array("\r", "\n", " "),'', $url);
+    private function normalizeURL($url)
+    {
+        $url =str_replace(array("\r", "\n", " "), '', $url);
         return $url;
     }
 
@@ -1075,7 +1072,8 @@ class BlockStickersBobs extends Module
         return $message;
     }
 
-    private function getClassColor($color) {
+    private function getClassColor($color)
+    {
 
         $array_color = $this->colorExpandList($color);
         $red = $array_color['red'];
@@ -1091,39 +1089,39 @@ class BlockStickersBobs extends Module
         $check_green = 0;
         $check_blue = 0;
 
-        if($red < $half_color) {
+        if ($red < $half_color) {
             $check_red = 0;
         }
-        if($half_color < $red && $red< $whole_color) {
+        if ($half_color < $red && $red< $whole_color) {
             $check_red = 1;
         }
-        if($whole_color < $red){
+        if ($whole_color < $red) {
             $check_red = 2;
         }
 
-        if($green < $half_color) {
+        if ($green < $half_color) {
             $check_green = 0;
         }
-        if($half_color < $green && $green < $whole_color) {
+        if ($half_color < $green && $green < $whole_color) {
             $check_green = 1;
         }
-        if($whole_color < $green){
+        if ($whole_color < $green) {
             $check_green = 2;
         }
 
-        if($blue < $half_color) {
+        if ($blue < $half_color) {
             $check_blue = 0;
         }
-        if($half_color < $blue && $blue < $whole_color) {
+        if ($half_color < $blue && $blue < $whole_color) {
             $check_blue = 1;
         }
-        if($whole_color < $blue){
+        if ($whole_color < $blue) {
             $check_blue = 2;
         }
 
 
-        if($check_red == 0) { //0
-            if($check_green == 0) { //0 0
+        if ($check_red == 0) { //0
+            if ($check_green == 0) { //0 0
                 if ($check_blue == 0) {
                     $class_color = 'black'; //0 0 0
                 }
@@ -1134,7 +1132,7 @@ class BlockStickersBobs extends Module
                     $class_color = 'super_blue'; //0 0 240
                 }
             }
-            if($check_green == 1) { //0 170
+            if ($check_green == 1) { //0 170
                 if ($check_blue == 0) {
                     $class_color = 'green'; //0 170 0
                 }
@@ -1145,7 +1143,7 @@ class BlockStickersBobs extends Module
                     $class_color = 'blue'; //0 170 240
                 }
             }
-            if($check_green == 2) { //0 240
+            if ($check_green == 2) { //0 240
                 if ($check_blue == 0) {
                     $class_color = 'saturated_green'; //0 240 0
                 }
@@ -1159,8 +1157,8 @@ class BlockStickersBobs extends Module
         }
 
 
-        if($check_red == 1) { //170
-            if($check_green == 0) { //170 0
+        if ($check_red == 1) { //170
+            if ($check_green == 0) { //170 0
                 if ($check_blue == 0) {
                     $class_color = 'saturated_red'; //170 0 0
                 }
@@ -1171,7 +1169,7 @@ class BlockStickersBobs extends Module
                     $class_color = 'purple_blue'; //170 0 240
                 }
             }
-            if($check_green == 1) { //170 170
+            if ($check_green == 1) { //170 170
                 if ($check_blue == 0) {
                     $class_color = 'saturated_olive'; //170 170 0
                 }
@@ -1182,7 +1180,7 @@ class BlockStickersBobs extends Module
                     $class_color = 'ocean'; //170 170 240
                 }
             }
-            if($check_green == 2) { //170 240
+            if ($check_green == 2) { //170 240
                 if ($check_blue == 0) {
                     $class_color = 'easy_olive'; //170 240 0
                 }
@@ -1195,7 +1193,7 @@ class BlockStickersBobs extends Module
             }
         }
 
-        if($check_red == 2) { //240
+        if ($check_red == 2) { //240
             if ($check_green == 0) { //240 0
                 if ($check_blue == 0) {
                     $class_color = 'red'; //240 0 0
@@ -1230,11 +1228,10 @@ class BlockStickersBobs extends Module
                 }
             }
         }
-
-        //$('[name = text_sticker]').val('$check_red ' + $check_red + ' $check_green ' + $check_green +' $check_blue  ' + $check_blue);
+        //$('[name = text_sticker]').val('$check_red ' +
+        //$check_red + ' $check_green ' + $check_green +' $check_blue  ' + $check_blue);
         //angle_right_sticker.text($class_color);
         //angle_left_sticker.text($class_color);
         return $class_color;
-
     }
 }
