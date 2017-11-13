@@ -24,7 +24,7 @@
 *}
 
 {if isset($stickers)}
-    <div class="stickers_bobs">
+    <div class="stickers_bobs" style="display: none;">
         {foreach from=$stickers item=sticker}
             <div class="box_sticker dinamic_stickers_{$sticker.id_sticker|escape:'quotes':'UTF-8'}
 				{if $sticker.type_sticker==0} box_sticker_right {/if}

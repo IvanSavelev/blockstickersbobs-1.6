@@ -259,6 +259,7 @@ class BlockStickersBobs extends Module
 
         $this->context->controller->addCSS($this->_path . 'views/css/stickers.css', 'all');
         $this->context->controller->addJs($this->_path . 'views/js/stickers_bobs.js', 'all');
+        $this->context->controller->addJs($this->_path . 'views/js/sticker_bobs.js', 'all');
 
         $stickers = StickersBobsTable::getStickers();
 
@@ -299,17 +300,20 @@ class BlockStickersBobs extends Module
 
     public function hookDisplayProductListReviews($params)
     {
-        return $this->frontViewsStickersBobs($params);
+        if(empty($this->tabl_stickers_front))
+        {
+            $this->hookDisplayHeader(null);
+        }
+        return $this->renderFrontSticker($params);
     }
 
 
     public function hookDisplayProductTabContent($params)
     {
-        return $this->frontViewsStickersBobs($params, true);
+        return $this->renderFrontSticker($params, true);
     }
 
-
-    private function frontViewsStickersBobs($params, $views_product_display = false)
+    private function renderFrontSticker($params, $views_product_display = false)
     {
         if ($views_product_display) {
             $stickers = $this->frontViewSticker(Tools::getValue('id_product'));
@@ -334,7 +338,6 @@ class BlockStickersBobs extends Module
 
     private function frontViewSticker($id_product)
     {
-        $this->context->controller->addJs($this->_path . 'views/js/sticker_bobs.js', 'all');
         $stickers_products_id = StickersProductsBobsTable::getStickersProduct($id_product);
         $stickers = array();
         foreach ($stickers_products_id as $sticker_products_id) {
@@ -949,6 +952,9 @@ class BlockStickersBobs extends Module
                     unset($find_data[$key]);
                 }
             }
+        }
+        if(Tools::getIsset('submitResetProductBlockstickersbobs')) {
+            $find_data = null;
         }
         $products = $this->getProductsData($filter_data, $find_data, (int)Tools::getValue('id_category'));
         if (count($products) > 1000 && !Tools::getIsset('open_category')) {
