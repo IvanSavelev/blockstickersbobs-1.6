@@ -220,7 +220,6 @@ class BlockStickersBobs extends Module
             $stickers_default_bobs_table->subtype_sticker = 0;
 
 
-
             $stickers_default_bobs_table->save();
         }
 
@@ -245,16 +244,13 @@ class BlockStickersBobs extends Module
                 unlink($path_image_old); //Delete Old image
             }
         }
-
         BlockStickersBobsModel::deleteTables();
-
         return parent::uninstall();
     }
 
 
     public function hookDisplayHeader($params)
     {
-
         $this->context->controller->addCSS($this->_path . 'views/css/stickers.css', 'all');
         $this->context->controller->addJs($this->_path . 'views/js/stickers_bobs.js', 'all');
         $this->context->controller->addJs($this->_path . 'views/js/sticker_bobs.js', 'all');
@@ -309,6 +305,7 @@ class BlockStickersBobs extends Module
     {
         return $this->renderFrontSticker($params, true);
     }
+
 
     private function renderFrontSticker($params, $views_product_display = false)
     {
@@ -400,29 +397,28 @@ class BlockStickersBobs extends Module
         $html = '';
 
         // If you keep the change from admin save the changes to the database, and clear the cache
-        if (Tools::isSubmit('delete_image_sticker')) {
+        if (Tools::getIsset('delete_image_sticker')) {
             $this->deleteImageSticker(Tools::getValue('id_sticker'));
             $html .= $this->displayConfirmation($this->l('Configuration updated'));
         }
-        if (Tools::isSubmit('save_sticker')) {
+        if (Tools::getIsset('save_sticker')) {
             $this->saveSticker();
             $html .= $this->displayConfirmation($this->l('Configuration updated'));
         }
-        if (Tools::isSubmit('save_sticker_product')) {
+        if (Tools::getIsset('save_sticker_product')) {
             $this->saveStickerProduct();
             $html .= $this->displayConfirmation($this->l('Configuration updated'));
         }
-        if (Tools::isSubmit('delete_stickers')) {
+        if (Tools::getIsset('delete_stickers')) {
             $this->deleteStickers(Tools::getValue('delete_stickers'));
             $html .= $this->displayConfirmation($this->l('Uninstall completed'));
         }
-        if (Tools::isSubmit('delete_sticker')) {
+        if (Tools::getIsset('delete_sticker')) {
             $this->deleteSticker(Tools::getValue('delete_sticker'));
             $html .= $this->displayConfirmation($this->l('Uninstall completed'));
         }
 
-
-        if (Tools::isSubmit('redirect')) {
+        if (Tools::getIsset('redirect')) {
             switch (Tools::getValue('redirect')) {
                 case 'stickers':
                     $html .= $this->renderStickers();
@@ -447,16 +443,15 @@ class BlockStickersBobs extends Module
 
     public function saveSticker()
     {
-
         // id sticker
-        if (Tools::isSubmit('id_sticker')) {
+        if (Tools::getIsset('id_sticker')) {
             $id_sticker = Tools::getValue('id_sticker');
         } else {
             $id_sticker = StickersBobsTable::getMaxID() + 1;
         }
 
         /*$subtype_sticker = 1;
-        if (Tools::isSubmit('subtype_sticker')) {
+        if (Tools::getIsset('subtype_sticker')) {
             $subtype_sticker = Tools::getValue('subtype_sticker');
         }*/
 
@@ -548,7 +543,7 @@ class BlockStickersBobs extends Module
         if (!StickersProductsBobsTable::deleteOfProduct($id_product)) {
             $this->errors[] = Tools::displayError('Error delete field BD');
         }
-        if (Tools::isSubmit('checkbox_sticker')) {
+        if (Tools::getIsset('checkbox_sticker')) {
             foreach (Tools::getValue('checkbox_sticker') as $id_sticker) {
                 $stickers_product_bobs_table = new StickersProductsBobsTable();
                 $stickers_product_bobs_table->id_sticker = $id_sticker;
@@ -689,7 +684,7 @@ class BlockStickersBobs extends Module
         $this->context->controller->addCSS($this->_path . 'views/css/stickers.css', 'all');
 
 
-        if (Tools::isSubmit('id_sticker')) {    //id sticker
+        if (Tools::getIsset('id_sticker')) {    //id sticker
             $id_sticker = Tools::getValue('id_sticker');
             $sticker = new StickersBobsTable($id_sticker);
             $new_sticker = false;
