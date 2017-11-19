@@ -57,7 +57,8 @@ $(document).ready(function () {
         $("#box_sticker").draggable('option', 'containment', [left_drag, top_drag, right_drag, bottom_drag]);
         $('#horizontal_strip_sticker').css({'line-height': $('#horizontal_strip_sticker').height() + 'px'});
         var line_height = parseInt($('[name = height_sticker]').val()) - parseInt($("[name = size_font_sticker]").val());
-        $('#label_sticker').css({'line-height': line_height + 'px'});
+        //$('#label_sticker').css({'line-height': line_height + 'px'});
+        $('#box_sticker').css({'line-height': $('[name = height_sticker]').val() + 'px'});
     }
 
     updateStikcerView();
@@ -88,6 +89,7 @@ $(document).ready(function () {
             $('#label_sticker').addClass('hidden');
             $('#horizontal_strip_sticker').addClass('hidden');
             $('#image_sticker').addClass('hidden');
+            $('#label_stylized_sticker').addClass('hidden');
 
 
             $('#sticker_block_basis').fadeIn();
@@ -119,6 +121,7 @@ $(document).ready(function () {
             $('#label_sticker').addClass('hidden');
             $('#horizontal_strip_sticker').addClass('hidden');
             $('#image_sticker').addClass('hidden');
+            $('#label_stylized_sticker').addClass('hidden');
 
             $('#sticker_block_basis').fadeIn();
             $('#sticker_block_image').fadeOut();
@@ -148,6 +151,7 @@ $(document).ready(function () {
             $('#label_sticker').removeClass('hidden');
             $('#horizontal_strip_sticker').addClass('hidden');
             $('#image_sticker').addClass('hidden');
+            $('#label_stylized_sticker').addClass('hidden');
 
             $('#box_sticker').removeClass('hidden');
 
@@ -186,6 +190,7 @@ $(document).ready(function () {
             $('#label_sticker').addClass('hidden');
             $('#horizontal_strip_sticker').removeClass('hidden');
             $('#image_sticker').addClass('hidden');
+            $('#label_stylized_sticker').addClass('hidden');
 
             $('#box_sticker').removeClass('hidden');
 
@@ -234,7 +239,8 @@ $(document).ready(function () {
             $('#label_sticker').addClass('hidden');
             $('#horizontal_strip_sticker').addClass('hidden');
             $('#image_sticker').removeClass('hidden');
-            //   $('#image_sticker_span').removeClass('hidden');
+            $('#label_stylized_sticker').addClass('hidden');
+
             $('#box_sticker').removeClass('hidden');
 
 
@@ -267,6 +273,45 @@ $(document).ready(function () {
 
 
         }
+        if (this.value == 5) //Label stylized
+        {
+            $('#box_sticker_angle_right').addClass('hidden');
+            $('#box_sticker_angle_left').addClass('hidden');
+            $('#label_sticker').addClass('hidden');
+            $('#horizontal_strip_sticker').addClass('hidden');
+            $('#image_sticker').addClass('hidden');
+            $('#label_stylized_sticker').removeClass('hidden');
+
+            $('#box_sticker').removeClass('hidden');
+
+
+            $('#sticker_block_basis').fadeIn();
+            $('#sticker_block_WHTP').fadeIn();
+            $('#sticker_block_image').fadeOut();
+            $('#sticker_block_horizontal_strip').fadeOut();
+
+            $('#message_view_stickers').removeClass('hidden');
+
+            $('[name = x_sticker]').val(sticker_default_label_stylized['x_sticker']).keyup();
+            $('[name = y_sticker]').val(sticker_default_label_stylized['y_sticker']).keyup();
+            $('[name = width_sticker]').val(sticker_default_label_stylized['width_sticker']).keyup();
+            $('[name = height_sticker]').val(sticker_default_label_stylized['height_sticker']).keyup();
+
+            $("#box_sticker").css({'overflow': 'hidden'});
+            $("#box_sticker").removeClass('box_sticker_left');
+
+            $("#box_sticker").draggable('destroy');
+            $("#box_sticker").draggable(
+                {
+                    drag: function(event, ui) {
+                        $('[name = x_sticker]').val(Math.round(ui.position.left));
+                        $('[name = y_sticker]').val(Math.round(ui.position.top));
+                    }
+                }
+            );
+            updateStikcerView();
+
+        }
 
     });
 
@@ -276,6 +321,7 @@ $(document).ready(function () {
     var label_sticker = $("#label_sticker");
     var horizontal_strip_sticker = $("#horizontal_strip_sticker");
     var image_sticker = $("#image_sticker");
+    var label_stylized_sticker = $("#label_stylized_sticker");
 
     angle_right_sticker.addClass(getClassColor($('[name = color_background_sticker]').val(), 0, 0));
     angle_left_sticker.addClass(getClassColor($('[name = color_background_sticker]').val(), 0, 0));
@@ -288,6 +334,7 @@ $(document).ready(function () {
         angle_left_sticker.text(Value);
         label_sticker.text(Value);
         horizontal_strip_sticker.text(Value);
+        label_stylized_sticker.text(Value);
 
     });
 
@@ -297,6 +344,7 @@ $(document).ready(function () {
         angle_left_sticker.css({'font-size': Value});
         label_sticker.css({'font-size': Value});
         horizontal_strip_sticker.css({'font-size': Value});
+        label_stylized_sticker.css({'font-size': Value});
         updateStikcerView();
     });
 
@@ -306,6 +354,7 @@ $(document).ready(function () {
         angle_left_sticker.css({'color': Value});
         label_sticker.css({'color': Value});
         horizontal_strip_sticker.css({'color': Value});
+        label_stylized_sticker.css({'color': Value});
 
     });
 
@@ -315,6 +364,7 @@ $(document).ready(function () {
         angle_left_sticker.css({'background': Value});
         label_sticker.css({'background': Value});
         horizontal_strip_sticker.css({'background': Value});
+        label_stylized_sticker.css({'background': Value});
 
         angle_right_sticker.addClass(getClassColor(Value, 1, 0));
         angle_left_sticker.addClass(getClassColor(Value, 1, 1));
@@ -508,7 +558,7 @@ $(document).ready(function () {
 
         //$('[name = text_sticker]').val('check_red ' + check_red + ' check_green ' + check_green +' check_blue  ' + check_blue);
         //angle_right_sticker.text(class_color);
-       //angle_left_sticker.text(class_color);
+        //angle_left_sticker.text(class_color);
         return class_color;
 
     }

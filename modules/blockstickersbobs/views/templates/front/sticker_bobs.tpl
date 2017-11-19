@@ -24,40 +24,44 @@
 *}
 
 {if isset($stickers)}
-    <div class="stickers_bobs" style="display: none;">
-        {foreach from=$stickers item=sticker}
-            <div class="box_sticker dinamic_stickers_{$sticker.id_sticker|escape:'quotes':'UTF-8'}
+	<div class="stickers_bobs" style="display: none">
+		{foreach from=$stickers item=sticker}
+			<div class="box_sticker dinamic_stickers_{$sticker.id_sticker|escape:'quotes':'UTF-8'}
 				{if $sticker.type_sticker==0} box_sticker_right {/if}
 				{if $sticker.type_sticker==1} box_sticker_left {/if}"
-					style="
-						{if $sticker.type_position_y=='T'}
-							top: {$sticker.y_sticker|escape:'quotes':'UTF-8'}px;
-						{else}
-							bottom: {$sticker.y_sticker|escape:'quotes':'UTF-8'}px;
-						{/if}
+				 style="
+				 {if $sticker.type_position_y=='T'}
+						 top: {$sticker.y_sticker|escape:'quotes':'UTF-8'}px;
+				 {else}
+						 bottom: {$sticker.y_sticker|escape:'quotes':'UTF-8'}px;
+				 {/if}
 
-						{if $sticker.type_position_x=='L'}
-							left:{$sticker.x_sticker|escape:'quotes':'UTF-8'}px;
-						{else}
-							right: {$sticker.x_sticker|escape:'quotes':'UTF-8'}px;
-						{/if}
+				 {if $sticker.type_position_x=='L'}
+						 left:{$sticker.x_sticker|escape:'quotes':'UTF-8'}px;
+				 {else}
+						 right: {$sticker.x_sticker|escape:'quotes':'UTF-8'}px;
+				 {/if}
 
-						{if $sticker.type_sticker==3}
-							width:100%;
-						{else}
-							width:{$sticker.width_sticker|escape:'quotes':'UTF-8'}px;
-						{/if}
-							height:{$sticker.height_sticker|escape:'quotes':'UTF-8'}px;
-					">
+				 {if $sticker.type_sticker==3}
+						 width:100%;
+				 {else}
+						 width:{$sticker.width_sticker|escape:'quotes':'UTF-8'}px;
+				 {/if}
+						 height:{$sticker.height_sticker|escape:'quotes':'UTF-8'}px;
+				 {if $sticker.type_sticker==2 || $sticker.type_sticker==5}
+						 line-height: {$sticker.height_sticker|escape:'quotes':'UTF-8'}px;
+				 {/if}
+
+						 ">
 
 				{if $sticker.type_sticker==0}
 					<span class="angle_right_sticker {$sticker.class_color_corners|escape:'quotes':'UTF-8'}"
 						  title="{$sticker.title|escape:'quotes':'UTF-8'}"
 						  style="
-							color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
-							font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
-							background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
-							">
+								  color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
+								  font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
+								  background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
+								  ">
 								{$sticker.text_sticker|escape:'quotes':'UTF-8'}
 					</span>
 				{/if}
@@ -66,10 +70,10 @@
 					<span class="angle_left_sticker {$sticker.class_color_corners|escape:'quotes':'UTF-8'}"
 						  title="{$sticker.title|escape:'quotes':'UTF-8'}"
 						  style="
-						color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
-						font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
-						background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
-						">
+								  color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
+								  font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
+								  background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
+								  ">
 							{$sticker.text_sticker|escape:'quotes':'UTF-8'}
 					 </span>
 				{/if}
@@ -78,12 +82,11 @@
 					<div class="label_sticker"
 						 title="{$sticker.title|escape:'quotes':'UTF-8'}"
 						 style="
-						 color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
-						 font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
-						 background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'};
-						 line-height: {$sticker.height_sticker-$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
-						 ">
-							{$sticker.text_sticker|escape:'quotes':'UTF-8'}
+								 color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
+								 font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
+								 background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'};
+								 ">
+						{$sticker.text_sticker|escape:'quotes':'UTF-8'}
 					</div>
 				{/if}
 
@@ -91,31 +94,42 @@
 					<div class="horizontal_strip_sticker"
 						 title="{$sticker.title|escape:'quotes':'UTF-8'}"
 						 style="
-						color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
-						font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
-						line-height: {$sticker.height_sticker|escape:'quotes':'UTF-8'}px;
-						background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
-						">
-							{$sticker.text_sticker|escape:'quotes':'UTF-8'}
+								 color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
+								 font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
+								 line-height: {$sticker.height_sticker|escape:'quotes':'UTF-8'}px;
+								 background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
+								 ">
+						{$sticker.text_sticker|escape:'quotes':'UTF-8'}
 					</div>
 				{/if}
 
 				{if $sticker.type_sticker==4}
 					<img class="image_sticker "
-						title="{$sticker.title|escape:'quotes':'UTF-8'}"
-						style="
-						border-radius: 0px;
-						background: none;
-						width:{$sticker.width_sticker|escape:'quotes':'UTF-8'}px;
-						height:{$sticker.height_sticker|escape:'quotes':'UTF-8'}px;
-						"
-						src="{$sticker.current_url_img|escape:'htmlall':'UTF-8'}"
-						alt=""
-						>
+						 title="{$sticker.title|escape:'quotes':'UTF-8'}"
+						 style="
+								 border-radius: 0px;
+								 background: none;
+								 width:{$sticker.width_sticker|escape:'quotes':'UTF-8'}px;
+								 height:{$sticker.height_sticker|escape:'quotes':'UTF-8'}px;
+								 "
+						 src="{$sticker.current_url_img|escape:'htmlall':'UTF-8'}"
+						 alt=""
+							>
 				{/if}
-            </div>
-        {/foreach}
-    </div>
+				{if $sticker.type_sticker==5}
+					<div class="label_stylized_sticker"
+						 title="{$sticker.title|escape:'quotes':'UTF-8'}"
+						 style="
+								 color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
+								 font-size: {$sticker.size_font_sticker|escape:'quotes':'UTF-8'}px;
+								 background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'};
+								 ">
+						{$sticker.text_sticker|escape:'quotes':'UTF-8'}
+					</div>
+				{/if}
+			</div>
+		{/foreach}
+	</div>
 {/if}
 
 

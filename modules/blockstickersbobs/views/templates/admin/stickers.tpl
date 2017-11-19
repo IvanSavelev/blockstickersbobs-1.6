@@ -25,10 +25,10 @@
 
 {if isset($message)}{$message|escape:'quotes':'UTF-8'}{/if}
 <form action="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=stickers" method="post" class="form-horizontal clearfix">
-    <div class="panel col-lg-12">
-        <div class="panel-heading">
-            {l s='Quantity' mod='blockstickersbobs'}
-            <span class="badge">{$stickers|count}</span>
+<div class="panel col-lg-12">
+	<div class="panel-heading">
+		{l s='Quantity' mod='blockstickersbobs'}
+		<span class="badge">{$stickers|count}</span>
 			<span class="panel-heading-action">
 				<a class="list-toolbar-btn" href="{$current_url|escape:'htmlall':'UTF-8'}&amp;redirect=sticker">
 					<span title="" data-toggle="tooltip" class="label-tooltip"
@@ -45,67 +45,67 @@
 					</span>
 				</a>
 			</span>
-        </div>
-        <div class="table-responsive clearfix">
-            <table class="table">
-                <thead>
-					<tr>
-						<th class="center fixed-width-xs"></th>
+	</div>
+	<div class="table-responsive clearfix">
+		<table class="table">
+			<thead>
+			<tr>
+				<th class="center fixed-width-xs"></th>
 
-						<th class=" left">
-							<span class="title_box active">{l s='ID' mod='blockstickersbobs'}</span>
-						</th>
+				<th class=" left">
+					<span class="title_box active">{l s='ID' mod='blockstickersbobs'}</span>
+				</th>
 
-						<th class="center ">
-							<span class="title_box">{l s='Sticker image' mod='blockstickersbobs'}</span>
-						</th>
+				<th class="center ">
+					<span class="title_box">{l s='Sticker image' mod='blockstickersbobs'}</span>
+				</th>
 
-						<th class=" left">
-							<span class="title_box">{l s='Name sticker' mod='blockstickersbobs'}</span>
-						</th>
+				<th class=" left">
+					<span class="title_box">{l s='Name sticker' mod='blockstickersbobs'}</span>
+				</th>
 
-						<th class=" left">
-							<span class="title_box">{l s='Status' mod='blockstickersbobs'}</span>
-						</th>
+				<th class=" left">
+					<span class="title_box">{l s='Status' mod='blockstickersbobs'}</span>
+				</th>
 
-						<th></th>
+				<th></th>
 
-					</tr>
-                </thead>
+			</tr>
+			</thead>
 
-                <tbody>
-                {foreach from=$stickers key=k item=sticker}
-                <tr class="{if $k is even} odd{/if}">
-                    <td class="text-center">
-                        <input type="checkbox" name="delete_stickers[]"
-                               value="{$sticker.id_sticker|escape:'quotes':'UTF-8'}"
-                               class="noborder">
-                    </td>
-
-                    <td class="left">
+			<tbody>
+			{foreach from=$stickers key=k item=sticker}
+				<tr class="{if $k is even} odd{/if}">
+					<td class="text-center">
+						<input type="checkbox" name="delete_stickers[]"
+							   value="{$sticker.id_sticker|escape:'quotes':'UTF-8'}"
+							   class="noborder">
 					</td>
 
-                    <td class="center">
-                        {if $sticker.type_sticker==0}
-                            <div class="box_sticker_stickers">
+					<td class="left">
+					</td>
+
+					<td class="center">
+						{if $sticker.type_sticker==0}
+							<div class="box_sticker_stickers">
 								<span class="angle_right_sticker" style="
 										color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
 										background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
 										">
 										{$sticker.text_sticker|escape:'quotes':'UTF-8'}
 								</span>
-                            </div>
-                        {elseif $sticker.type_sticker==1}
-                            <div class="box_sticker_stickers">
+							</div>
+						{elseif $sticker.type_sticker==1}
+							<div class="box_sticker_stickers">
 								<span class="angle_left_sticker" style="
 										color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
 										background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
 										">
 									{$sticker.text_sticker|escape:'quotes':'UTF-8'}
 								</span>
-                            </div>
-                        {elseif $sticker.type_sticker==2}
-                            <div class="box_sticker_stickers any_width">
+							</div>
+						{elseif $sticker.type_sticker==2}
+							<div class="box_sticker_stickers any_width">
 								<span class="label_sticker"
 									  style="
 											  color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
@@ -113,24 +113,34 @@
 											  ">
 									{$sticker.text_sticker|escape:'quotes':'UTF-8'}
 								</span>
-                            </div>
-                        {elseif $sticker.type_sticker==3}
-                            <div class="box_sticker_stickers any_width">
+							</div>
+						{elseif $sticker.type_sticker==3}
+							<div class="box_sticker_stickers any_width">
 								<span class="horizontal_strip_sticker" style="
 										color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
 										background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
 										">
 									{$sticker.text_sticker|escape:'quotes':'UTF-8'}
 								</span>
-                            </div>
-                        {elseif $sticker.type_sticker==4}
-                            <div class="box_sticker_stickers">
-                                <img class="image_sticker {if $sticker.type_sticker!=4}hidden {/if}"
-                                     src="{$sticker.current_url_img|escape:'htmlall':'UTF-8'}"
-                                     width="{$sticker.width_sticker|escape:'quotes':'UTF-8'}"
-                                     height="{$sticker.height_sticker|escape:'quotes':'UTF-8'}">
-                            </div>
-                        {/if}
+							</div>
+						{elseif $sticker.type_sticker==4}
+							<div class="box_sticker_stickers">
+								<img class="image_sticker {if $sticker.type_sticker!=4}hidden {/if}"
+									 src="{$sticker.current_url_img|escape:'htmlall':'UTF-8'}"
+									 width="{$sticker.width_sticker|escape:'quotes':'UTF-8'}"
+									 height="{$sticker.height_sticker|escape:'quotes':'UTF-8'}">
+							</div>
+						{elseif $sticker.type_sticker==5}
+							<div class="box_sticker_stickers any_width">
+								<span class="label_stylized_sticker"
+									  style="
+											  color: {$sticker.color_font_sticker|escape:'quotes':'UTF-8'};
+											  background: {$sticker.color_background_sticker|escape:'quotes':'UTF-8'}
+											  ">
+									{$sticker.text_sticker|escape:'quotes':'UTF-8'}
+								</span>
+							</div>
+						{/if}
 					</td>
 
 					<td class="left">
@@ -140,13 +150,13 @@
 					<td class="left">
 						{if $sticker.activate==1}
 							<span class="list-action-enable action-enabled"
-							   title="{l s='Active' mod='blockstickersbobs'}">
+								  title="{l s='Active' mod='blockstickersbobs'}">
 								<i class="icon-check"></i>
 							</span>
 						{/if}
 						{if $sticker.activate==0}
 							<span class="list-action-enable action-disabled"
-							   title="{l s='No active' mod='blockstickersbobs'}">
+								  title="{l s='No active' mod='blockstickersbobs'}">
 								<i class="icon-remove "></i>
 							</span>
 						{/if}
@@ -179,40 +189,40 @@
 				</tr>
 
 			{/foreach}
-        </tbody>
+			</tbody>
 
-        </table>
-    </div>
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="btn-group bulk-actions">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    {l s='Bulk actions' mod='blockstickersbobs'}  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="#"
-                           onclick="javascript:checkDelBoxes($(this).closest('form').get(0), 'delete_stickers[]', true);return false;">
-                            <i class="icon-check-sign"></i> &nbsp;{l s='Select all' mod='blockstickersbobs'}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"
-                           onclick="javascript:checkDelBoxes($(this).closest('form').get(0), 'delete_stickers[]', false);return false;">
-                            <i class="icon-check-empty"></i> &nbsp; {l s='Unselect all' mod='blockstickersbobs'}
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="#"
-                           onclick="if (confirm('{l s='Delete selected stickers?' mod='blockstickersbobs'}'))sendBulkAction($(this).closest('form').get(0));">
-                            &nbsp;{l s='Delete selected' mod='blockstickersbobs'}
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+		</table>
+	</div>
+	<div class="row">
+		<div class="col-lg-6">
+			<div class="btn-group bulk-actions">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					{l s='Bulk actions' mod='blockstickersbobs'}  <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li>
+						<a href="#"
+						   onclick="javascript:checkDelBoxes($(this).closest('form').get(0), 'delete_stickers[]', true);return false;">
+							<i class="icon-check-sign"></i> &nbsp;{l s='Select all' mod='blockstickersbobs'}
+						</a>
+					</li>
+					<li>
+						<a href="#"
+						   onclick="javascript:checkDelBoxes($(this).closest('form').get(0), 'delete_stickers[]', false);return false;">
+							<i class="icon-check-empty"></i> &nbsp; {l s='Unselect all' mod='blockstickersbobs'}
+						</a>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a href="#"
+						   onclick="if (confirm('{l s='Delete selected stickers?' mod='blockstickersbobs'}'))sendBulkAction($(this).closest('form').get(0));">
+							&nbsp;{l s='Delete selected' mod='blockstickersbobs'}
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 
-    </div>
-    </div>
+	</div>
+</div>
 </form>

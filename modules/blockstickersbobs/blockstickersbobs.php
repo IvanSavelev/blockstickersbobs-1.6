@@ -31,7 +31,7 @@ include_once(_PS_MODULE_DIR_ . 'blockstickersbobs/classes/stickersproductsbobsta
 class BlockStickersBobs extends Module
 {
 
-    const _WIDTH_BOX_ = 250;
+    const _WIDTH_BOX_PRODUCT_LIST_ = 250;
     const URL_DEFAULT_IMG = '/modules/blockstickersbobs/views/img/default_image.png';
     protected $tabl_stickers_front = array();
 
@@ -40,7 +40,7 @@ class BlockStickersBobs extends Module
     {
         $this->name = 'blockstickersbobs';
         $this->tab = 'front_office_features';
-        $this->version = '1.1.0';
+        $this->version = '1.1.1';
         $this->author = 'Ivan Savelev';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -71,7 +71,7 @@ class BlockStickersBobs extends Module
             return false;
         }
 
-        for ($id = 1; $id < 6; $id ++) {
+        for ($id = 1; $id < 7; $id ++) {
             $stickers_bobs_table = new StickersBobsTable();
             if ($id == 1) {
                 $stickers_bobs_table->name = "Sticker №1";
@@ -133,6 +133,18 @@ class BlockStickersBobs extends Module
                 $stickers_bobs_table->height_sticker = 50;
                 $stickers_bobs_table->type_sticker = 4;
             }
+            if ($id == 6) {
+                $stickers_bobs_table->name = "Sticker №6";
+                $stickers_bobs_table->text_sticker = "Sale!";
+                $stickers_bobs_table->color_font_sticker = '#ffffff';
+                $stickers_bobs_table->color_background_sticker = '#2fb5d2';
+                $stickers_bobs_table->size_font_sticker = '15';
+                $stickers_bobs_table->x_sticker = -6;
+                $stickers_bobs_table->y_sticker = 10;
+                $stickers_bobs_table->width_sticker = 71;
+                $stickers_bobs_table->height_sticker = 30;
+                $stickers_bobs_table->type_sticker = 5;
+            }
 
             $stickers_bobs_table->title = 'title';
             $stickers_bobs_table->activate = 1;
@@ -153,7 +165,7 @@ class BlockStickersBobs extends Module
             return false;
         }
 
-        for ($type_sticker = 0; $type_sticker < 5; $type_sticker ++) {
+        for ($type_sticker = 0; $type_sticker < 6; $type_sticker ++) {
             $stickers_default_bobs_table =new StickersDefaultBobsTable();
 
             if ($type_sticker == 0) {
@@ -211,6 +223,17 @@ class BlockStickersBobs extends Module
                 $stickers_default_bobs_table->width_sticker = 50;
                 $stickers_default_bobs_table->height_sticker = 50;
             }
+            if ($type_sticker == 5) {
+                $stickers_default_bobs_table->name = "label_stylized";
+                $stickers_default_bobs_table->text_sticker = "Sale!";
+                $stickers_default_bobs_table->color_font_sticker = '#ffffff';
+                $stickers_default_bobs_table->color_background_sticker = '#2fb5d2';
+                $stickers_default_bobs_table->size_font_sticker = 15;
+                $stickers_default_bobs_table->x_sticker = -6;
+                $stickers_default_bobs_table->y_sticker = 10;
+                $stickers_default_bobs_table->width_sticker = 71;
+                $stickers_default_bobs_table->height_sticker = 30;
+            }
 
             $stickers_default_bobs_table->title = "Sale!";
             $stickers_default_bobs_table->activate = 1;
@@ -249,16 +272,31 @@ class BlockStickersBobs extends Module
     }
 
 
-    public function hookDisplayHeader($params)
+    public function hookActionFrontControllerSetMedia($params)
     {
         $this->context->controller->addCSS($this->_path . 'views/css/stickers.css', 'all');
         $this->context->controller->addJs($this->_path . 'views/js/stickers_bobs.js', 'all');
         $this->context->controller->addJs($this->_path . 'views/js/sticker_bobs.js', 'all');
+    }
 
-        $stickers = StickersBobsTable::getStickers();
+
+    public function hookDisplayHeader($params)
+    {
+        if (empty($this->tabl_stickers_front) || !isset($this->tabl_stickers_front)) {
+            $tabl_stickers_front = StickersBobsTable::getStickers();
+            $this->addCurrentUrlImgSt($tabl_stickers_front);
+            $this->tabl_stickers_front = $tabl_stickers_front;
+            if (version_compare(_PS_VERSION_, '1.7.1', '>=') === true) {
+                // no hook for PS > 1.7.0
+            } else {
+                $this->hookActionFrontControllerSetMedia($params);
+            }
+        }
+
+        /*$stickers = StickersBobsTable::getStickers();
 
         //normalize left Top ...
-        $block_canvas = self::_WIDTH_BOX_ / 2;
+        $block_canvas = self::_WIDTH_BOX_PRODUCT_LIST_ / 2;
         foreach ($stickers as $key => $sticker) {
             if ($sticker['type_sticker'] == 0) {    //Right angle
                 $stickers[$key]['type_position_y'] = 'T';
@@ -274,7 +312,7 @@ class BlockStickersBobs extends Module
                 $stickers[$key]['type_position_y'] = 'T';
             } else {    //bottom
                 $stickers[$key]['type_position_y'] = 'B';
-                $stickers[$key]['y_sticker'] = self::_WIDTH_BOX_ -
+                $stickers[$key]['y_sticker'] = self::_WIDTH_BOX_PRODUCT_LIST_ -
                                                (int)$sticker['y_sticker'] -
                                                (int)$sticker['height_sticker'];
             }
@@ -282,21 +320,19 @@ class BlockStickersBobs extends Module
                 $stickers[$key]['type_position_x'] = 'L';
             } else {
                 $stickers[$key]['type_position_x'] = 'R';
-                $stickers[$key]['x_sticker'] = self::_WIDTH_BOX_ -
+                $stickers[$key]['x_sticker'] = self::_WIDTH_BOX_PRODUCT_LIST_ -
                                                (int)$sticker['x_sticker'] -
                                                (int)$sticker['width_sticker'] - 2;
             }
         }
         $this->addCurrentUrlImgSt($stickers);
-        $this->tabl_stickers_front = $stickers;
+        $this->tabl_stickers_front = $stickers;*/
     }
 
 
     public function hookDisplayProductListReviews($params)
     {
-        if (empty($this->tabl_stickers_front)) {
-            $this->hookDisplayHeader(null);
-        }
+        $this->hookDisplayHeader(true);
         return $this->renderFrontSticker($params);
     }
 
@@ -310,33 +346,78 @@ class BlockStickersBobs extends Module
     private function renderFrontSticker($params, $views_product_display = false)
     {
         if ($views_product_display) {
+            $id_product = Tools::getValue('id_product');
+            $stickers = $this->frontViewSticker($id_product);
+            return $this->getFrontHTML($stickers, $id_product, 'sticker');
+        } else {
+            $stickers = $this->frontViewStickers($params['product']['id_product']);
+            $id_product = $params['product']['id_product'];
+            return $this->getFrontHTML($stickers, $id_product, 'stickers');
+        }
+
+
+      /*  if ($views_product_display) {
             $stickers = $this->frontViewSticker(Tools::getValue('id_product'));
             $id_product = Tools::getValue('id_product');
         } else {
             $stickers = $this->frontViewStickers($params['product']['id_product']);
             $id_product = $params['product']['id_product'];
-        }
+        }*/
+    }
 
-        if (!$this->isCached('views/templates/front/sticker_bobs.tpl', $this->getCacheId((int)$id_product))) {
+
+    private function getFrontHTML($stickers, $id_product, $page_type)
+    {
+        $cache_id = (string)$id_product . '_' . $page_type;
+        if (!$this->isCached('views/templates/front/sticker_bobs.tpl', $this->getCacheId($cache_id))) {
             if (isset($stickers)) {
                 $this->smarty->assign(array(
                     'stickers' => $stickers
                 ));
             }
         }
-
-        return $this->display(__FILE__, 'views/templates/front/sticker_bobs.tpl', $this->getCacheId((int)$id_product));
+        return $this->display(__FILE__, 'views/templates/front/sticker_bobs.tpl', $this->getCacheId((int)$cache_id));
     }
 
 
     private function frontViewSticker($id_product)
     {
+        $block_canvas = self::_WIDTH_BOX_PRODUCT_LIST_ / 2; //Coordination
+
         $stickers_products_id = StickersProductsBobsTable::getStickersProduct($id_product);
         $stickers = array();
         foreach ($stickers_products_id as $sticker_products_id) {
             foreach ($this->tabl_stickers_front as $sticker) {
                 if ($sticker['id_sticker'] == $sticker_products_id['id_sticker'] && $sticker['visible_inside'] != 0) {
                     $sticker['class_color_corners'] = $this->getClassColor($sticker['color_background_sticker']);
+
+                    if ($sticker['type_sticker'] != 0 && $sticker['type_sticker'] != 1) {
+                        if ($sticker['y_sticker'] < $block_canvas) {    //top
+                            $sticker['type_position_y'] = 'T';
+                        } else {    //bottom
+                            $sticker['type_position_y'] = 'B';
+                            $sticker['y_sticker'] = self::_WIDTH_BOX_PRODUCT_LIST_ -
+                                                    (int)$sticker['y_sticker'] -
+                                                    (int)$sticker['height_sticker'];
+                        }
+                        if ($sticker['x_sticker'] < $block_canvas) {    //left
+                            $sticker['type_position_x'] = 'L';
+                        } else {
+                            $sticker['type_position_x'] = 'R';
+                            $sticker['x_sticker'] = self::_WIDTH_BOX_PRODUCT_LIST_ -
+                                                    (int)$sticker['x_sticker'] -
+                                                    (int)$sticker['width_sticker'] -
+                                                    2;
+                        }
+                    } else {
+                        $sticker['type_position_y'] = 'T';
+                        if ($sticker['type_sticker'] == 0) {
+                            $sticker['type_position_x'] = 'R';
+                        } else {
+                            $sticker['type_position_x'] = 'L';
+                        }
+                    }
+
                     $stickers[] = $sticker;
                     break;
                 }
@@ -354,6 +435,15 @@ class BlockStickersBobs extends Module
             foreach ($this->tabl_stickers_front as $sticker) {
                 if ($sticker['id_sticker'] == $sticker_products_id['id_sticker']) {
                     $sticker['class_color_corners'] = $this->getClassColor($sticker['color_background_sticker']);
+
+                    if ($sticker['type_sticker'] == 0) {    //Right angle
+                        $sticker['type_position_y'] = 'T';
+                        $sticker['type_position_x'] = 'R';
+                    }
+                    if ($sticker['type_sticker'] == 1 || $sticker['type_sticker'] > 1) {    //Other
+                        $sticker['type_position_y'] = 'T';
+                        $sticker['type_position_x'] = 'L';
+                    }
                     $stickers[] = $sticker;
                     break;
                 }
@@ -641,7 +731,7 @@ class BlockStickersBobs extends Module
             'id_product'         => $id_product,
             'name_product'       => $name_product,
             'path_image_product' => $path_image_product,
-            'width_box'          => self::_WIDTH_BOX_,
+            'width_box'          => self::_WIDTH_BOX_PRODUCT_LIST_,
             'message'            => $message,
             'current_url'        =>
                 $this->normalizeURL(
@@ -679,10 +769,8 @@ class BlockStickersBobs extends Module
 
     public function renderSticker()
     {
-
         $this->context->controller->addCSS($this->_path . 'views/css/admin_style.css', 'all');
         $this->context->controller->addCSS($this->_path . 'views/css/stickers.css', 'all');
-
 
         if (Tools::getIsset('id_sticker')) {    //id sticker
             $id_sticker = Tools::getValue('id_sticker');
@@ -690,7 +778,7 @@ class BlockStickersBobs extends Module
             $new_sticker = false;
         } else {
             $sticker = new StickersDefaultBobsTable(1);
-            $id_sticker = StickersBobsTable::getMaxID()+1;
+            $id_sticker = StickersBobsTable::getMaxID() + 1;
             $sticker->name = 'New sticker №' . $id_sticker;
             $new_sticker = true;
         }
@@ -703,7 +791,7 @@ class BlockStickersBobs extends Module
         $this->context->controller->addJs($this->_path . 'views/js/render_sticker_admin.js', 'all');
         $this->context->controller->addJs('js/jquery/plugins/jquery.colorpicker.js', 'all');
         $this->context->controller->addJQueryUI('ui.draggable');
-        Media::addJsDef(array('width_box' => self::_WIDTH_BOX_));
+        Media::addJsDef(array('width_box' => self::_WIDTH_BOX_PRODUCT_LIST_));
         Media::addJsDef(array('type_sticker' => $sticker->type_sticker));
 
         /* BEGIN STICKER DEFAULT ADD */
@@ -715,6 +803,7 @@ class BlockStickersBobs extends Module
         $sticker_default_label = array();
         $sticker_default_horizontal_strip = array();
         $sticker_default_image = array();
+        $sticker_default_label_stylized = array();
         foreach ($stickers_default as $sticker_default) {
             if ($sticker_default['type_sticker'] == 0) {
                 $sticker_default_angle_right = $sticker_default;
@@ -731,6 +820,9 @@ class BlockStickersBobs extends Module
             if ($sticker_default['type_sticker'] == 4) {
                 $sticker_default_image = $sticker_default;
             }
+            if ($sticker_default['type_sticker'] == 5) {
+                $sticker_default_label_stylized = $sticker_default;
+            }
         }
 
         Media::addJsDef(array('sticker_default_angle_right' => $sticker_default_angle_right));
@@ -738,6 +830,7 @@ class BlockStickersBobs extends Module
         Media::addJsDef(array('sticker_default_label' => $sticker_default_label));
         Media::addJsDef(array('sticker_default_horizontal_strip' => $sticker_default_horizontal_strip));
         Media::addJsDef(array('sticker_default_image' => $sticker_default_image));
+        Media::addJsDef(array('sticker_default_label_stylized' => $sticker_default_label_stylized));
 
         /* END STICKER DEFAULT ADD */
 
@@ -768,19 +861,19 @@ class BlockStickersBobs extends Module
             'sticker_default_label'            => $sticker_default_label,
             'sticker_default_horizontal_strip' => $sticker_default_horizontal_strip,
             'sticker_default_image'            => $sticker_default_image,
+            'sticker_default_label_stylized'   => $sticker_default_label_stylized,
             'message'                          => $message,
-            'width_box'                        => self::_WIDTH_BOX_,
+            'width_box'                        => self::_WIDTH_BOX_PRODUCT_LIST_,
             'color_font_sticker_color'         => $color_font_sticker_color,
             'color_background_sticker_color'   => $color_background_sticker_color,
             'current_url_img'                  => $current_url_img,
             'current_url_default_img'          => $this::URL_DEFAULT_IMG,
             'new_sticker'                      => $new_sticker,
             'current_url'                      => $this->normalizeURL(
-                $this->context->link->getAdminLink('AdminModules') . '&' .
-                'configure=blockstickersbobs&
+                $this->context->link->getAdminLink('AdminModules') .
+                '&' . 'configure=blockstickersbobs&
                 tab_module=front_office_features&
-                module_name=blockstickersbobs' .
-                $id_product_for_return
+                module_name=blockstickersbobs' . $id_product_for_return
             ),
             'redirect'                         => $redirect
         ));

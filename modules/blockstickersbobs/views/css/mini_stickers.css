@@ -1,0 +1,165 @@
+
+.box_sticker_stickers > .angle_right_sticker {
+    color: #fff;
+    background: #dc7633;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 1px 0 1px;
+    left: -10px;
+    top: 13px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.24);
+    width: 84px;
+    display: block;
+    z-index: 1;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    font-size: 8px;
+    position: relative;
+    cursor: pointer;
+}
+
+.box_sticker_stickers > .angle_right_sticker:before {
+    position: absolute;
+    bottom: -3px;
+    right: 4px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 4px 4px 0 4px;
+    border-color: #ad2b34 transparent transparent transparent;
+    content: ".";
+    text-indent: -5000px;
+    cursor: pointer;
+@include rotate(225 deg);
+}
+
+.box_sticker_stickers > .angle_right_sticker:after {
+    position: absolute;
+    bottom: -3px;
+    left: 2px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 4px 4px 0 5px;
+    border-color: #ad2b34 transparent transparent transparent;
+    content: ".";
+    text-indent: -5000px;
+    cursor: pointer;
+@include rotate(135 deg);
+}
+
+.box_sticker_stickers > .angle_left_sticker {
+
+    color: #fff;
+    background: #dc7633;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 1px 0 1px;
+    left: -23px;
+    top: 12px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.24);
+    width: 84px;
+    display: block;
+    z-index: 1;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    font-size: 8px;
+    position: relative;
+    cursor: pointer;
+}
+
+.box_sticker_stickers > .angle_left_sticker:before {
+    position: absolute;
+    bottom: -3px;
+    right: 4px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 4px 4px 0 4px;
+    border-color: #ad2b34 transparent transparent transparent;
+    content: ".";
+    text-indent: -5000px;
+    cursor: pointer;
+@include rotate(225 deg);
+}
+
+.box_sticker_stickers > .angle_left_sticker:after {
+    position: absolute;
+    bottom: -3px;
+    left: 3px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 4px 4px 0 4px;
+    border-color: #ad2b34 transparent transparent transparent;
+    content: ".";
+    text-indent: -5000px;
+    cursor: pointer;
+@include rotate(135 deg);
+}
+
+.box_sticker_stickers > .label_sticker {
+    color: rgb(255, 255, 255);
+    background: rgb(0, 192, 79);
+    -moz-border-radius: 69px / 46px;
+    -webkit-border-radius: 69px / 46px;
+    border-radius: 69px / 46px;
+    padding: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    top: 14px;
+    font-size: 8px;
+    white-space: nowrap;
+}
+
+.box_sticker_stickers > .horizontal_strip_sticker {
+
+    color: rgb(255, 255, 255);
+    background: rgb(0, 192, 79);
+    padding: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    top: 14px;
+    font-size: 8px;
+    white-space: nowrap;
+}
+
+.box_sticker_stickers > .image_sticker {
+    cursor: pointer;
+}
+
+
+.box_sticker_stickers > .label_stylized_sticker {
+    color: rgb(255, 255, 255);
+    background: rgb(0, 192, 79);
+    padding: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    top: 14px;
+    font-size: 8px;
+    white-space: nowrap;
+    font-weight: 600;
+    box-shadow: 2px 2px 4px 0 rgba(0,0,0,.2);
+}
+
+.box_sticker_stickers {
+    height: 50px;
+    width: 50px;
+    /* top: -1px; */
+    /* left: 172px; */
+    overflow: hidden;
+    /* height: 85px; */
+    vertical-align: middle;
+    text-align: center;
+    display: inline-block;
+    z-index: 0;
+}
+
+.any_width {
+    overflow: visible;
+}

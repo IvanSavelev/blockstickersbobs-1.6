@@ -83,7 +83,7 @@ $(document).ready(function () {
 
         if (Sticker['type_sticker'] == 2) {
             $('#' + idDIV + ' > .sub_div').css({
-                'line-height': (Sticker['height_sticker'] -  Sticker['size_font_sticker']) + 'px'
+                'line-height': Sticker['height_sticker']  + 'px'
             });
             DIVclone.css({
                 'top': Sticker['y_sticker'] + 'px',
@@ -104,6 +104,19 @@ $(document).ready(function () {
                 'height': Sticker['height_sticker'] + 'px'
             });
         }
+        if (Sticker['type_sticker'] == 5) {
+            $('#' + idDIV + ' > .sub_div').css({
+                'line-height': Sticker['height_sticker']  + 'px'
+            });
+            DIVclone.css({
+                'top': Sticker['y_sticker'] + 'px',
+                'left': Sticker['x_sticker'] + 'px',
+                'width': Sticker['width_sticker'] + 'px',
+                'height': Sticker['height_sticker'] + 'px'
+            });
+        }
+
+
 
         if (Sticker['type_sticker'] != 4) //HTML sticker
         {
@@ -126,6 +139,8 @@ $(document).ready(function () {
             $('#' + idDIV + ' > .sub_div').height(Sticker['height_sticker'] + 'px')
             $('#' + idDIV + ' > .sub_div').attr('src', Sticker['current_url_img']);
         }
+
+
 
 
     }

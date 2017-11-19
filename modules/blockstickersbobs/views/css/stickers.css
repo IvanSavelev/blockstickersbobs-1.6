@@ -1,0 +1,256 @@
+
+.box_sticker > .angle_right_sticker, .box_sticker > .angle_left_sticker {
+    font: 700 14px/12px Arial, Helvetica, sans-serif;
+    color: #fff;
+    background: #f13340;
+    text-transform: uppercase;
+    padding: 9px 0 7px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.24);
+    width: 130px;
+    text-align: center;
+    display: block;
+    position: absolute;
+    right: -33px;
+    top: 16px;
+    z-index: 1;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    cursor: pointer;
+}
+
+.box_sticker > .angle_right_sticker:before, .box_sticker > .angle_left_sticker:before {
+    position: absolute;
+    bottom: -3px;
+    right: 4px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 4px 4px 0 4px;
+    border-color: #ad2b34 transparent transparent transparent;
+    content: ".";
+    text-indent: -5000px;
+    -webkit-transform: rotate(225deg);
+    -ms-transform: rotate(225deg);
+    transform: rotate(225deg);
+    cursor: pointer;
+}
+
+.box_sticker > .angle_right_sticker:after, .box_sticker > .angle_left_sticker:after {
+    position: absolute;
+    bottom: -3px;
+    left: 5px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 4px 4px 0 4px;
+    border-color: #ad2b34 transparent transparent transparent;
+    content: ".";
+    text-indent: -5000px;
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg);
+}
+
+.box_sticker > .label_sticker {
+    width: 100%;
+    height: 100%;
+    background: slategray;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    background: rgb(0, 192, 79);
+    -moz-border-radius: 69px / 46px;
+    -webkit-border-radius: 69px / 46px;
+    border-radius: 69px / 46px;
+    padding: 5px;
+    text-transform: uppercase;
+    line-height: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.box_sticker > .horizontal_strip_sticker {
+    width: 100%;
+    height: 100%;
+    background: slategray;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    background: rgb(0, 192, 79);
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.box_sticker > .image_sticker {
+    cursor: pointer;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.box_sticker > .label_stylized_sticker {
+    display: block;
+    position: absolute;
+    left: -4px;
+    background: #2fb5d2;
+    text-transform: uppercase;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .2);
+}
+
+.box_sticker {
+    position: absolute;
+
+    overflow: hidden;
+    height: 85px;
+    width: 85px;
+    text-align: center;
+}
+
+.box_sticker_left {
+    transform: rotate(-90deg);
+}
+
+.box_sticker > .angle_left_sticker:before {
+    right: 3px;
+}
+
+/*crutch to display a Preview button in the product tab*/
+.span_link {
+    z-index: 1 !important;
+}
+
+/* 0 x x */
+/* 0 0 x */
+.black:before, .black:after {
+    border-color: rgb(0, 0, 0) transparent transparent transparent !important;
+}
+
+.saturated_blue:before, .saturated_blue:after {
+    border-color: rgb(0, 0, 101) transparent transparent transparent !important;
+}
+
+.super_blue:before, .super_blue:after {
+    border-color: rgb(0, 0, 201) transparent transparent transparent !important;
+}
+
+/* 0 1 x */
+.green:before, .green:after {
+    border-color: rgb(0, 101, 0) transparent transparent transparent !important;
+}
+
+.lada:before, .lada:after {
+    border-color: rgb(0, 101, 101) transparent transparent transparent !important;
+}
+
+.blue:before, .blue:after {
+    border-color: rgb(0, 101, 201) transparent transparent transparent !important;
+}
+
+/* 0 2 x */
+.saturated_green:before, .saturated_green:after {
+    border-color: rgb(0, 201, 0) transparent transparent transparent !important;
+}
+
+.easy_green:before, .easy_green:after {
+    border-color: rgb(0, 201, 101) transparent transparent transparent !important;
+}
+
+.saturated_ocean:before, .saturated_ocean:after {
+    border-color: rgb(0, 201, 201) transparent transparent transparent !important;
+}
+
+/* 1 x x */
+/* 1 0 x */
+.saturated_red:before, .saturated_red:after {
+    border-color: rgb(101, 0, 0) transparent transparent transparent !important;
+}
+
+.gray_blue:before, .gray_blue:after {
+    border-color: rgb(101, 0, 101) transparent transparent transparent !important;
+}
+
+.purple_blue:before, .purple_blue:after {
+    border-color: rgb(101, 0, 201) transparent transparent transparent !important;
+}
+
+/* 1 1 x */
+.saturated_olive:before, .saturated_olive:after {
+    border-color: rgb(101, 101, 0) transparent transparent transparent !important;
+}
+
+.gray:before, .gray:after {
+    border-color: rgb(101, 101, 101) transparent transparent transparent !important;
+}
+
+.ocean:before, .ocean:after {
+    border-color: rgb(101, 101, 201) transparent transparent transparent !important;
+}
+
+/* 1 2 x */
+.easy_olive:before, .easy_olive:after {
+    border-color: rgb(101, 201, 0) transparent transparent transparent !important;
+}
+
+.olive:before, .olive:after {
+    border-color: rgb(101, 201, 101) transparent transparent transparent !important;
+}
+
+.plastic:before, .plastic:after {
+    border-color: rgb(101, 201, 201) transparent transparent transparent !important;
+}
+
+/* 2 x x */
+/* 2 0 x */
+.red:before, .red:after {
+    border-color: rgb(153, 0, 0) transparent transparent transparent !important;
+}
+
+.purple_red:before, .purple_red:after {
+    border-color: rgb(201, 0, 101) transparent transparent transparent !important;
+}
+
+.saturated_purple:before, .saturated_purple:after {
+    border-color: rgb(201, 0, 201) transparent transparent transparent !important;
+}
+
+/* 2 1 x */
+.brown:before, .brown:after {
+    border-color: rgb(201, 101, 0) transparent transparent transparent !important;
+}
+
+.pink:before, .pink:after {
+    border-color: rgb(201, 101, 101) transparent transparent transparent !important;
+}
+
+.purple:before, .purple:after {
+    border-color: rgb(201, 101, 201) transparent transparent transparent !important;
+}
+
+/* 2 2 x */
+.easy_brown:before, .easy_brown:after {
+    border-color: rgb(188, 175, 0) transparent transparent transparent !important;
+}
+
+.flesh:before, .flesh:after {
+    border-color: rgb(201, 201, 101) transparent transparent transparent !important;
+}
+
+.easy_gray:before, .easy_gray:after {
+    border-color: rgb(236, 236, 236) transparent transparent transparent !important;
+}
+
+/*
+
+
+
+*/
+
+
+
+
