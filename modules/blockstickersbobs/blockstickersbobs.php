@@ -406,8 +406,7 @@ class BlockStickersBobs extends Module
                             $sticker['type_position_x'] = 'R';
                             $sticker['x_sticker'] = self::_WIDTH_BOX_PRODUCT_LIST_ -
                                                     (int)$sticker['x_sticker'] -
-                                                    (int)$sticker['width_sticker'] -
-                                                    2;
+                                                    (int)$sticker['width_sticker'];
                         }
                     } else {
                         $sticker['type_position_y'] = 'T';
@@ -582,10 +581,10 @@ class BlockStickersBobs extends Module
                         unlink($path_image_old); //Delete Old image
                     }
                 }
-
-                $path_image_new = $this->local_path . 'views/img/' .
-                                  $id_sticker . strrchr(Tools::getValue('filename'), '.');
-                if (empty($this->errors) && !ImageManager::resize($tmp_name, $path_image_new, null, null)) {
+                $new_image_type = strrchr($_FILES['thumbnail']['type'], '/');
+                $new_image_type = Tools::substr($new_image_type, 1);
+                $path_image_new = $this->local_path . 'views/img/' . $id_sticker . '.' . $new_image_type;
+                if (empty($this->errors) && !ImageManager::resize($tmp_name, $path_image_new, null, null, 'png')) {
                     $this->errors[] = Tools::displayError('An error occurred while uploading the image.');
                     unlink($tmp_name);
                     return false;
