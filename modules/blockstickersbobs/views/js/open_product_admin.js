@@ -82,14 +82,12 @@ $(document).ready(function () {
         }
 
         if (Sticker['type_sticker'] == 2) {
-            $('#' + idDIV + ' > .sub_div').css({
-                'line-height': Sticker['height_sticker']  + 'px'
-            });
             DIVclone.css({
                 'top': Sticker['y_sticker'] + 'px',
                 'left': Sticker['x_sticker'] + 'px',
                 'width': Sticker['width_sticker'] + 'px',
-                'height': Sticker['height_sticker'] + 'px'
+                'height': Sticker['height_sticker'] + 'px',
+                'line-height': Sticker['height_sticker']  + 'px'
             });
         }
 

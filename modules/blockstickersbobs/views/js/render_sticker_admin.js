@@ -570,6 +570,7 @@ $(document).ready(function () {
     });
 
     $('[name = y_sticker]').keyup(function () {
+        $('[name = y_sticker]').val(this.value); //Kostil
         $("#box_sticker").css({'top': Math.round($('[name = y_sticker]:visible').val()) + 'px'})
     });
 
